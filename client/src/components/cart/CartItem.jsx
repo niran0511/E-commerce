@@ -23,7 +23,7 @@ const CartItem = ({ item, onUpdateQty, onRemove, onSaveForLater }) => {
   return (
     <div
       className="p-3 mb-3 fade-in"
-      style={{ display: 'flex', gap: 16, flexWrap: 'wrap', background: 'var(--bg-secondary)', borderRadius: 24 }}
+      style={{ display: 'flex', gap: 16, flexWrap: 'wrap', background: 'white', borderRadius: 16, border: '1px solid #f3f4f6', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}
     >
       {/* Image */}
       <Link to={`/products/${productId || item._id}`} style={{ flexShrink: 0 }}>
@@ -31,8 +31,8 @@ const CartItem = ({ item, onUpdateQty, onRemove, onSaveForLater }) => {
           style={{
             width: 110,
             height: 110,
-            borderRadius: 'var(--radius-md)',
-            background: 'var(--bg-secondary)',
+            borderRadius: 8,
+            background: '#f9fafb',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -52,11 +52,11 @@ const CartItem = ({ item, onUpdateQty, onRemove, onSaveForLater }) => {
       <div style={{ flex: 1, minWidth: 200 }}>
         <Link
           to={`/products/${productId || item._id}`}
-          style={{ textDecoration: 'none', color: 'var(--text-primary)' }}
+          style={{ textDecoration: 'none', color: '#111827' }}
         >
           <h6 className="mb-1 fw-semibold line-clamp-2" style={{ fontSize: '0.95rem' }}>{name}</h6>
         </Link>
-        {brand && <p className="mb-2" style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{brand}</p>}
+        {brand && <p className="mb-2" style={{ color: '#6b7280', fontSize: '0.8rem' }}>{brand}</p>}
 
         {/* Price */}
         <div className="d-flex align-items-baseline gap-2 mb-3">
@@ -67,12 +67,12 @@ const CartItem = ({ item, onUpdateQty, onRemove, onSaveForLater }) => {
         {/* Actions Row */}
         <div className="d-flex align-items-center gap-3 flex-wrap">
           {/* Quantity Stepper */}
-          <div className="d-flex align-items-center rounded-pill" style={{ background: '#312920', padding: '2px' }}>
-            <button onClick={() => onUpdateQty(item._id, quantity - 1)} disabled={quantity <= 1} style={{ background: 'transparent', color: 'white', border: 'none', width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="d-flex align-items-center rounded-pill" style={{ background: '#f9fafb', border: '1px solid #e5e7eb', padding: '2px' }}>
+            <button onClick={() => onUpdateQty(item._id, quantity - 1)} disabled={quantity <= 1} style={{ background: 'transparent', color: '#4b5563', border: 'none', width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <FiMinus size={12} />
             </button>
-            <span style={{ color: 'white', fontWeight: 600, minWidth: 20, textAlign: 'center', fontSize: 13 }}>{quantity}</span>
-            <button onClick={() => onUpdateQty(item._id, quantity + 1)} style={{ background: 'transparent', color: 'white', border: 'none', width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: '#111827', fontWeight: 600, minWidth: 20, textAlign: 'center', fontSize: 13 }}>{quantity}</span>
+            <button onClick={() => onUpdateQty(item._id, quantity + 1)} style={{ background: 'transparent', color: '#4b5563', border: 'none', width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <FiPlus size={12} />
             </button>
           </div>
@@ -83,10 +83,10 @@ const CartItem = ({ item, onUpdateQty, onRemove, onSaveForLater }) => {
                 className="btn btn-sm d-flex align-items-center gap-1"
                 onClick={() => onSaveForLater(item._id)}
                 style={{
-                  color: 'var(--primary)',
+                  color: '#ea580c',
                   background: 'none',
-                  border: '1px solid var(--primary)',
-                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid #ea580c',
+                  borderRadius: 8,
                   fontSize: '0.8rem',
                   padding: '4px 12px'
                 }}
@@ -98,9 +98,9 @@ const CartItem = ({ item, onUpdateQty, onRemove, onSaveForLater }) => {
               className="btn btn-sm d-flex align-items-center gap-1"
               onClick={() => onRemove(item._id)}
               style={{
-                color: 'var(--primary)',
-                background: 'rgba(255,107,0,0.1)',
-                border: 'none',
+                color: '#ef4444',
+                background: '#fef2f2',
+                border: '1px solid #fee2e2',
                 borderRadius: '8px',
                 fontSize: '0.8rem',
                 padding: '6px 12px'
@@ -114,7 +114,7 @@ const CartItem = ({ item, onUpdateQty, onRemove, onSaveForLater }) => {
 
       {/* Item Total */}
       <div className="text-end" style={{ minWidth: 80 }}>
-        <p className="mb-0 fw-bold" style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
+        <p className="mb-0 fw-bold" style={{ fontSize: '1.1rem', color: '#111827' }}>
           ₹{itemTotal?.toLocaleString('en-IN')}
         </p>
       </div>

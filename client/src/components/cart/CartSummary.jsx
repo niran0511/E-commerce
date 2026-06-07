@@ -20,8 +20,8 @@ const CartSummary = () => {
   const hasItems = cartItems.length > 0;
 
   return (
-    <div className="custom-card p-4" style={{ borderRadius: 16 }}>
-      <h5 className="mb-4" style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: 'var(--text-primary)' }}>
+    <div className="p-4" style={{ background: 'white', border: '1px solid #f3f4f6', borderRadius: 16, boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+      <h5 className="mb-4" style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, color: '#111827' }}>
         <FiShoppingBag className="me-2" />Order Summary
       </h5>
 
@@ -37,11 +37,11 @@ const CartSummary = () => {
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 onKeyDown={(e) => e.key === 'Enter' && handleApplyCoupon()}
-                style={{ paddingLeft: 36, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
+                style={{ paddingLeft: 36, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
               />
             </div>
             <button className="btn btn-sm px-3 rounded-pill" onClick={handleApplyCoupon} disabled={applying || !couponCode.trim()}
-              style={{ background: 'var(--primary)', color: 'white', fontWeight: 600, whiteSpace: 'nowrap' }}>
+              style={{ background: '#ff5722', color: 'white', fontWeight: 600, whiteSpace: 'nowrap' }}>
               {applying ? '...' : 'Apply'}
             </button>
           </div>
@@ -73,18 +73,18 @@ const CartSummary = () => {
           ...(discount > 0 ? [{ label: 'Coupon Discount', value: <span style={{ color: 'var(--success)' }}>-₹{(discount || 0).toLocaleString('en-IN')}</span> }] : []),
         ].map((row, i) => (
           <div key={i} className="d-flex justify-content-between align-items-center">
-            <span style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>{row.label}</span>
-            <span style={{ fontWeight: 500, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{row.value}</span>
+            <span style={{ color: '#4b5563', fontSize: '0.88rem' }}>{row.label}</span>
+            <span style={{ fontWeight: 500, fontSize: '0.9rem', color: '#111827' }}>{row.value}</span>
           </div>
         ))}
       </div>
 
-      <hr style={{ borderColor: 'var(--border-color)', margin: '12px 0' }} />
+      <hr style={{ borderColor: '#f3f4f6', margin: '12px 0' }} />
 
       {/* Total */}
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <span style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--text-primary)' }}>Total Payable</span>
-        <span style={{ fontWeight: 800, fontSize: '1.4rem', fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>
+        <span style={{ fontWeight: 700, fontSize: '1.05rem', color: '#111827' }}>Total Payable</span>
+        <span style={{ fontWeight: 800, fontSize: '1.4rem', fontFamily: "'Inter', sans-serif", color: '#ff5722' }}>
           ₹{(total || 0).toLocaleString('en-IN')}
         </span>
       </div>
@@ -107,10 +107,10 @@ const CartSummary = () => {
         onClick={() => navigate('/checkout')}
         disabled={!hasItems}
         style={{
-          background: hasItems ? 'var(--primary)' : 'var(--bg-secondary)',
-          color: hasItems ? 'white' : 'var(--text-muted)',
+          background: hasItems ? '#ff5722' : '#f3f4f6',
+          color: hasItems ? 'white' : '#9ca3af',
           padding: '14px', fontSize: 16, fontWeight: 700,
-          border: 'none', transition: 'all 0.2s', cursor: hasItems ? 'pointer' : 'not-allowed',
+          border: 'none', borderRadius: 8, transition: 'all 0.2s', cursor: hasItems ? 'pointer' : 'not-allowed',
         }}
       >
         {hasItems ? `Checkout` : 'Add items to checkout'}
