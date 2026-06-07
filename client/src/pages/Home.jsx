@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaArrowRight, FaTruck, FaShieldAlt, FaUndo, FaRobot, FaStar, FaFire, FaTag } from 'react-icons/fa';
-import { BsStars, BsLightningChargeFill } from 'react-icons/bs';
+import { FaArrowRight, FaTruck, FaShieldAlt, FaUndo, FaRobot, FaStar, FaTag } from 'react-icons/fa';
+import { BsStars } from 'react-icons/bs';
 import ProductCard from '../components/product/ProductCard';
 import SkeletonCard from '../components/common/SkeletonCard';
 import { useTheme } from '../context/ThemeContext';
@@ -29,19 +29,7 @@ export default function Home() {
   const [newArrivals, setNewArrivals] = useState([]);
   const [bestSellers, setBestSellers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [heroIndex, setHeroIndex] = useState(0);
   const navigate = useNavigate();
-
-  const heroSlides = [
-    { title: 'Discover Smart Shopping with AI', sub: 'Your personal AI assistant finds the best products, compares prices, and tracks orders.', cta: 'Shop Now', gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%)' },
-    { title: 'Up to 50% Off on Electronics', sub: 'Latest gadgets, laptops, phones at unbeatable prices. Shop before the deal ends.', cta: 'Grab Deals', gradient: 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)' },
-    { title: 'New Fashion Arrivals', sub: 'Trending styles for every occasion. Explore top brands at amazing prices.', cta: 'Explore Now', gradient: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)' },
-  ];
-
-  useEffect(() => {
-    const timer = setInterval(() => setHeroIndex(i => (i + 1) % heroSlides.length), 5000);
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -60,7 +48,6 @@ export default function Home() {
     fetchAll();
   }, []);
 
-  const { theme } = useTheme();
 
   return (
     <div style={{ background: 'var(--bg-primary)' }}>
@@ -149,7 +136,6 @@ export default function Home() {
         <div className="container">
           <div className="d-flex justify-content-between overflow-auto pb-3 w-100 gap-3" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {CATEGORIES.map((cat, i) => {
-              const imgUrl = `https://images.unsplash.com/photo-${1500000000000 + i * 100000}?auto=format&fit=crop&w=150&h=150&q=80`;
               return (
               <div key={i} className="text-center" style={{ minWidth: '72px' }}>
                 <Link to={`/products?category=${cat.name}`} className="text-decoration-none">
