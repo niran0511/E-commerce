@@ -59,7 +59,7 @@ export default function Checkout() {
     setApplying(true);
     try {
       const res = await couponService.applyCoupon(couponCode.trim(), subtotal);
-      setCheckoutCoupon(res.data?.data?.coupon || res.data?.coupon || res.data);
+      setCheckoutCoupon(res.data?.data || res.data);
       toast.success('Coupon applied successfully! 🎉');
       setCouponCode('');
     } catch (error) {

@@ -145,7 +145,7 @@ export const CartProvider = ({ children }) => {
   const applyCoupon = async (code) => {
     try {
       const res = await axios.post(`${API_URL}/coupons/apply`, { code, cartTotal: subtotal });
-      const couponData = res.data?.data?.coupon || res.data?.coupon || res.data;
+      const couponData = res.data?.data || res.data;
       setCoupon(couponData);
       toast.success('Coupon applied successfully! 🎉');
       return { success: true, coupon: couponData };
