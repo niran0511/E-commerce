@@ -128,9 +128,7 @@ export default function Products() {
         <h6 className="fw-600 mb-2" style={{ fontSize: 13, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1 }}>Price Range</h6>
         {PRICE_RANGES.map((range, i) => (
           <div key={i} className="form-check mb-2">
-            {/* eslint-disable-next-line eqeqeq */}
             <input className="form-check-input" type="radio" name="price"
-              {/* eslint-disable-next-line eqeqeq */}
               checked={filters.minPrice == range.min && filters.maxPrice == range.max}
               onChange={() => { const f = { ...filters, minPrice: range.min, maxPrice: range.max }; applyFilters(f); }}
               style={{ accentColor: 'var(--primary)', cursor: 'pointer' }} />
@@ -144,11 +142,8 @@ export default function Products() {
         <h6 className="fw-600 mb-2" style={{ fontSize: 13, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1 }}>Minimum Rating</h6>
         {[4, 3, 2, 1].map(r => (
           <div key={r} className="form-check mb-2">
-            {/* eslint-disable-next-line eqeqeq */}
             <input className="form-check-input" type="radio" name="rating"
-              {/* eslint-disable-next-line eqeqeq */}
               checked={filters.rating == r}
-              {/* eslint-disable-next-line eqeqeq */}
               onChange={() => updateFilter('rating', filters.rating == r ? '' : r)}
               style={{ accentColor: 'var(--primary)', cursor: 'pointer' }} />
             <label className="form-check-label d-flex align-items-center gap-1" style={{ color: 'var(--text-primary)', fontSize: 14, cursor: 'pointer' }}>
