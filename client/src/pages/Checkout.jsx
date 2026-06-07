@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaCheck, FaLock, FaShieldAlt, FaTruck, FaUndo, FaCreditCard, FaClipboardList } from 'react-icons/fa';
+import { FiTag, FiX } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import orderService from '../services/orderService';
@@ -11,7 +12,7 @@ import axios from 'axios';
 const STEPS = ['Shipping', 'Payment', 'Review'];
 
 export default function Checkout() {
-  const { cartItems, clearCart } = useCart();
+  const { cartItems, clearCart, coupon: globalCoupon } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,6 +25,10 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [saveInfo, setSaveInfo] = useState(true);
 
+  const [checkoutCoupon, setCheckoutCoupon] = useState(!buyNowItem ? globalCoupon : null);
+  const [couponCode, setCouponCode] = useState('');
+  const [applying, setApplying] = useState(false);
+
   const [shipping, setShipping] = useState({
     email: user?.email || '', name: user?.name || '', phone: user?.phone || '',
     street: prefilledAddress?.street || '', street2: '', 
@@ -33,15 +38,36 @@ export default function Checkout() {
 
   const activeItems = buyNowItem ? [buyNowItem] : (cartItems || []).filter(i => !i.savedForLater);
   const subtotal = activeItems.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity, 0);
-  const tax = Math.round(subtotal * 0.18);
   const shippingCharge = subtotal >= 500 ? 0 : 50;
   
-  // Hardcode 10% discount to match the screenshot vibe if there's no dynamic coupon
-  const total = subtotal + shippingCharge; // Removing tax for simpler UI matching the screenshot
-  const discountAmount = Math.round(subtotal * 0.10); 
-  const finalTotal = total - discountAmount;
+  const total = subtotal + shippingCharge;
+  let discountAmount = 0;
+  if (checkoutCoupon) {
+    if (checkoutCoupon.discountType === 'percentage') {
+      discountAmount = Math.round(subtotal * (checkoutCoupon.discountValue / 100));
+      if (checkoutCoupon.maxDiscount) discountAmount = Math.min(discountAmount, checkoutCoupon.maxDiscount);
+    } else {
+      discountAmount = checkoutCoupon.discountValue;
+    }
+  }
+  const finalTotal = Math.max(0, total - discountAmount);
 
   const updateShipping = (k, v) => setShipping(p => ({ ...p, [k]: v }));
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setApplying(true);
+    try {
+      const res = await couponService.applyCoupon(couponCode.trim(), subtotal);
+      setCheckoutCoupon(res.data?.data?.coupon || res.data?.coupon || res.data);
+      toast.success('Coupon applied successfully! 🎉');
+      setCouponCode('');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Invalid coupon code');
+    } finally {
+      setApplying(false);
+    }
+  };
 
   // Load Razorpay SDK dynamically
   const loadRazorpay = () => new Promise(resolve => {
@@ -375,6 +401,42 @@ export default function Checkout() {
               </div>
 
               <hr style={{ borderColor: '#f3f4f6', margin: '24px 0' }} />
+
+              {/* Coupon Section */}
+              {!checkoutCoupon ? (
+                <div className="mb-4">
+                  <div className="d-flex gap-2">
+                    <div className="position-relative flex-grow-1">
+                      <FiTag size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} />
+                      <input
+                        type="text" className="form-control"
+                        placeholder="Coupon code"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        onKeyDown={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                        style={{ paddingLeft: 36, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
+                      />
+                    </div>
+                    <button className="btn btn-sm px-3 rounded-pill" onClick={handleApplyCoupon} disabled={applying || !couponCode.trim()}
+                      style={{ background: '#ff5722', color: 'white', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                      {applying ? '...' : 'Apply'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="d-flex align-items-center justify-content-between mb-4 p-2 px-3"
+                  style={{ background: 'rgba(16,185,129,0.1)', borderRadius: 10, border: '1px solid rgba(16,185,129,0.2)' }}>
+                  <div className="d-flex align-items-center gap-2">
+                    <FiTag size={14} style={{ color: '#10b981' }} />
+                    <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#10b981' }}>
+                      {checkoutCoupon.code} applied!
+                    </span>
+                  </div>
+                  <button onClick={() => setCheckoutCoupon(null)} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', padding: 4 }}>
+                    <FiX size={16} />
+                  </button>
+                </div>
+              )}
 
               <div className="d-flex justify-content-between mb-3" style={{ fontSize: 15, color: '#4b5563' }}>
                 <span>Subtotal</span>

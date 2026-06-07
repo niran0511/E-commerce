@@ -36,8 +36,19 @@ export const CartProvider = ({ children }) => {
   }, 0);
   const tax = Math.round(subtotal * 0.18 * 100) / 100;
   const shipping = subtotal > 500 ? 0 : subtotal > 0 ? 50 : 0;
-  const discount = coupon ? Math.round(subtotal * (coupon.discount || 0) / 100 * 100) / 100 : 0;
-  const total = Math.round((subtotal + tax + shipping - discount) * 100) / 100;
+  
+  let discount = 0;
+  if (coupon && subtotal >= (coupon.minPurchase || 0)) {
+    if (coupon.discountType === 'percentage') {
+      discount = subtotal * ((coupon.discountValue || 0) / 100);
+      if (coupon.maxDiscount) discount = Math.min(discount, coupon.maxDiscount);
+    } else {
+      discount = coupon.discountValue || 0;
+    }
+  }
+  discount = Math.round(discount * 100) / 100;
+
+  const total = Math.max(0, Math.round((subtotal + tax + shipping - discount) * 100) / 100);
 
   const fetchCart = useCallback(async () => {
     if (!isAuthenticated) return;
