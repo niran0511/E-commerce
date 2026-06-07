@@ -55,7 +55,7 @@ const CartSummary = () => {
           <div className="d-flex align-items-center gap-2">
             <FiTag size={14} style={{ color: 'var(--success)' }} />
             <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--success)' }}>
-              {coupon.code} — {coupon.discount}% OFF applied!
+              {coupon.code} — {coupon.discountType === 'percentage' ? `${coupon.discountValue}%` : `₹${coupon.discountValue}`} OFF applied!
             </span>
           </div>
           <button onClick={removeCoupon} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 4 }}>
