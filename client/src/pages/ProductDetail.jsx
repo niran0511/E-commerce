@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaShoppingCart, FaHeart, FaBolt, FaTruck, FaShieldAlt, FaUndo, FaStar, FaMapMarkerAlt, FaCheckCircle, FaChevronDown, FaTag } from 'react-icons/fa';
+import { FaShoppingCart, FaHeart, FaTruck, FaShieldAlt, FaUndo, FaStar, FaMapMarkerAlt, FaCheckCircle, FaChevronDown, FaTag } from 'react-icons/fa';
 import ProductGallery from '../components/product/ProductGallery';
-import StarRating from '../components/common/StarRating';
 import ReviewCard from '../components/reviews/ReviewCard';
 import ReviewForm from '../components/reviews/ReviewForm';
 import ProductCard from '../components/product/ProductCard';
@@ -71,13 +70,7 @@ export default function ProductDetail() {
     finally { setAddingToCart(false); }
   };
 
-  const handleWishlist = async () => {
-    if (!isAuthenticated) { toast.error('Please login to use wishlist'); navigate('/login'); return; }
-    try {
-      if (wishlisted) { await removeFromWishlist(id); setWishlisted(false); toast.info('Removed from wishlist'); }
-      else { await addToWishlist(id); setWishlisted(true); toast.success('Added to wishlist!'); }
-    } catch (e) { toast.error('Action failed'); }
-  };
+
 
   const handleBuyNow = () => {
     if (!isAuthenticated) { toast.error('Please login to checkout'); navigate('/login'); return; }
@@ -146,7 +139,6 @@ export default function ProductDetail() {
   const activeStock = activeVariant ? activeVariant.stock : product.stock;
   const activeDiscount = activeMrp > activePrice ? Math.round(((activeMrp - activePrice) / activeMrp) * 100) : product.discount || 0;
   
-  const emiAmount = Math.round(activePrice / 36);
   const deliveryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
   const deliveryFormatted = deliveryDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', weekday: 'short' });
 

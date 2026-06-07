@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaHeart, FaShoppingCart, FaTrash } from 'react-icons/fa';
 import BreadcrumbNav from '../components/common/Breadcrumb';
 import { useWishlist } from '../context/WishlistContext';
-import { useCart } from '../context/CartContext';
+
 import { toast } from 'react-toastify';
 
 export default function Wishlist() {
