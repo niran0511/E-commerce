@@ -74,7 +74,7 @@ export default function Products() {
     setFilters(newFilters);
     setCurrentPage(1);
     fetchProducts(1, newFilters);
-  }, [location.search]);
+  }, [location.search]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const applyFilters = (newFilters) => {
     setFilters(newFilters);
@@ -129,7 +129,7 @@ export default function Products() {
         {PRICE_RANGES.map((range, i) => (
           <div key={i} className="form-check mb-2">
             <input className="form-check-input" type="radio" name="price"
-              checked={filters.minPrice == range.min && filters.maxPrice == range.max}
+              checked={Number(filters.minPrice) === range.min && Number(filters.maxPrice) === range.max}
               onChange={() => { const f = { ...filters, minPrice: range.min, maxPrice: range.max }; applyFilters(f); }}
               style={{ accentColor: 'var(--primary)', cursor: 'pointer' }} />
             <label className="form-check-label" style={{ color: 'var(--text-primary)', fontSize: 14, cursor: 'pointer' }}>{range.label}</label>
@@ -143,8 +143,8 @@ export default function Products() {
         {[4, 3, 2, 1].map(r => (
           <div key={r} className="form-check mb-2">
             <input className="form-check-input" type="radio" name="rating"
-              checked={filters.rating == r}
-              onChange={() => updateFilter('rating', filters.rating == r ? '' : r)}
+              checked={Number(filters.rating) === r}
+              onChange={() => updateFilter('rating', Number(filters.rating) === r ? '' : r)}
               style={{ accentColor: 'var(--primary)', cursor: 'pointer' }} />
             <label className="form-check-label d-flex align-items-center gap-1" style={{ color: 'var(--text-primary)', fontSize: 14, cursor: 'pointer' }}>
               {Array(r).fill(0).map((_, i) => <FaStar key={i} size={13} color="#f59e0b" />)} & up

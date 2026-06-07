@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaShoppingCart, FaHeart, FaTruck, FaShieldAlt, FaUndo, FaStar, FaMapMarkerAlt, FaCheckCircle, FaChevronDown, FaTag } from 'react-icons/fa';
+import { FaTruck, FaShieldAlt, FaUndo, FaStar, FaMapMarkerAlt, FaCheckCircle, FaChevronDown, FaTag } from 'react-icons/fa';
 import ProductGallery from '../components/product/ProductGallery';
 import ReviewCard from '../components/reviews/ReviewCard';
 import ReviewForm from '../components/reviews/ReviewForm';
 import ProductCard from '../components/product/ProductCard';
 import BreadcrumbNav from '../components/common/Breadcrumb';
 import { useCart } from '../context/CartContext';
-import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import productService from '../services/productService';
 import reviewService from '../services/reviewService';
@@ -17,7 +16,6 @@ export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { isAuthenticated, user, updateProfile } = useAuth();
   const isAdmin = user?.role === 'admin';
 
@@ -27,7 +25,6 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
-  const [wishlisted, setWishlisted] = useState(false);
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
 
   const [showEmiModal, setShowEmiModal] = useState(false);
@@ -49,7 +46,6 @@ export default function ProductDetail() {
         setProduct(prod);
         const reviewData = rRes.data?.data;
         setReviews(Array.isArray(reviewData) ? reviewData : (reviewData?.reviews || []));
-        setWishlisted(isInWishlist(id));
         if (prod?.category) {
           const relRes = await productService.getProducts({ category: prod.category?.name, limit: 5 });
           const relData = relRes.data?.data;
@@ -60,7 +56,7 @@ export default function ProductDetail() {
       finally { setLoading(false); }
     };
     fetchProduct();
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) { toast.error('Please login to add to cart'); navigate('/login'); return; }
