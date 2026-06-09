@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   FaTachometerAlt, FaBox, FaShoppingBag, FaUsers,
-  FaStar, FaSignOutAlt, FaBars, FaTimes, FaTicketAlt
+  FaStar, FaSignOutAlt, FaBars, FaTimes, FaTicketAlt, FaHeadset
 } from 'react-icons/fa';
 import { BsCartFill,BsBagFill } from 'react-icons/bs';
 import { useAuth } from '../../context/AuthContext';
@@ -12,6 +12,7 @@ const NAV = [
   { path: '/admin/products', label: 'Products',  icon: <FaBox size={16} /> },
   { path: '/admin/orders',   label: 'Orders',    icon: <FaShoppingBag size={16} /> },
   { path: '/admin/coupons',  label: 'Coupons',   icon: <FaTicketAlt size={16} /> },
+  { path: '/admin/tickets',  label: 'Support Tickets', icon: <FaHeadset size={16} /> },
   { path: '/admin/users',    label: 'Users',     icon: <FaUsers size={16} /> },
   { path: '/admin/reviews',  label: 'Reviews',   icon: <FaStar size={16} /> },
 ];

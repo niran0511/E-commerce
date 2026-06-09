@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaRegUser, FaRegListAlt, FaHeadset, FaRegCreditCard, FaRegClock, FaGift, FaChevronRight } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import Pagination from '../components/common/Pagination';
 import orderService from '../services/orderService';
+import ticketService from '../services/ticketService';
 
 export default function Orders() {
   const [activeTab, setActiveTab] = useState('My Orders');
@@ -11,6 +13,9 @@ export default function Orders() {
   const [filter, setFilter] = useState('All');
   const [dateFilter, setDateFilter] = useState('Select date range');
   const [currentPage, setCurrentPage] = useState(1);
+  const [ticketIssueType, setTicketIssueType] = useState('Order Mistake');
+  const [ticketMessage, setTicketMessage] = useState('');
+  const [ticketLoading, setTicketLoading] = useState(false);
   const LIMIT = 5;
   const navigate = useNavigate();
 
@@ -235,37 +240,126 @@ export default function Orders() {
           )}
 
           {activeTab === 'Customer Care' && (
-            <div className="text-center py-5" style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <FaHeadset size={60} color="#e5e7eb" style={{ marginBottom: 20 }} />
-              <h4 style={{ color: '#111827', fontWeight: 700 }}>How can we help?</h4>
-              <p style={{ color: '#6b7280', maxWidth: 400 }}>Contact our 24/7 customer support for any queries regarding your orders, returns, or account.</p>
-              <button className="btn mt-3" style={{ background: '#8e1c2e', color: 'white', padding: '10px 24px', borderRadius: 8, fontWeight: 600 }}>Chat with us</button>
+            <div className="py-4" style={{ maxWidth: 600, margin: '0 auto' }}>
+              <div className="text-center mb-4">
+                <FaHeadset size={50} color="#8e1c2e" style={{ marginBottom: 15 }} />
+                <h4 style={{ color: '#111827', fontWeight: 700 }}>How can we help?</h4>
+                <p style={{ color: '#6b7280' }}>Please select the issue and provide details. Our support team will get back to you shortly.</p>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                if (!ticketMessage) return toast.error('Please enter a message');
+                setTicketLoading(true);
+                try {
+                  await ticketService.createTicket({ issueType: ticketIssueType, message: ticketMessage });
+                  toast.success('Message sent to Admin successfully!');
+                  setTicketMessage('');
+                } catch (err) {
+                  toast.error('Failed to send message');
+                } finally {
+                  setTicketLoading(false);
+                }
+              }}>
+                <div className="mb-3">
+                  <label style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Select Issue</label>
+                  <select 
+                    value={ticketIssueType} onChange={e => setTicketIssueType(e.target.value)}
+                    className="form-select" style={{ padding: '12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }}>
+                    <option value="Order Mistake">Order Mistake (Wrong Item/Size)</option>
+                    <option value="Delivery Delay">Delivery Delay</option>
+                    <option value="Payment Issue">Payment Issue</option>
+                    <option value="Product Quality">Product Quality / Damage</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Message Details</label>
+                  <textarea 
+                    value={ticketMessage} onChange={e => setTicketMessage(e.target.value)}
+                    className="form-control" rows="5" placeholder="Describe your issue in detail..." 
+                    style={{ padding: '12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14, resize: 'none' }}></textarea>
+                </div>
+                <button type="submit" className="btn w-100" disabled={ticketLoading} style={{ background: '#8e1c2e', color: 'white', padding: '12px', borderRadius: 8, fontWeight: 600 }}>
+                  {ticketLoading ? 'Sending...' : 'Send Message to Support'}
+                </button>
+              </form>
             </div>
           )}
 
           {activeTab === 'Saved cards' && (
-            <div className="text-center py-5" style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <FaRegCreditCard size={60} color="#e5e7eb" style={{ marginBottom: 20 }} />
-              <h4 style={{ color: '#111827', fontWeight: 700 }}>Saved Cards</h4>
-              <p style={{ color: '#6b7280', maxWidth: 400 }}>You haven't saved any credit or debit cards yet. Save a card for faster checkout.</p>
-              <button className="btn mt-3" style={{ border: '1px solid #8e1c2e', color: '#8e1c2e', padding: '10px 24px', borderRadius: 8, fontWeight: 600 }}>Add New Card</button>
+            <div className="py-4" style={{ maxWidth: 700, margin: '0 auto' }}>
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h4 style={{ color: '#111827', fontWeight: 700, margin: 0 }}>Saved Cards</h4>
+                <button className="btn" style={{ background: '#f3f4f6', color: '#374151', fontWeight: 600, fontSize: 13, borderRadius: 20, padding: '8px 16px' }}>+ Add New Card</button>
+              </div>
+              <div className="d-flex flex-column gap-3">
+                {/* Mock Card 1 */}
+                <div className="d-flex justify-content-between align-items-center" style={{ padding: '20px', border: '1px solid #e5e7eb', borderRadius: 12, background: 'white' }}>
+                  <div className="d-flex align-items-center gap-4">
+                    <div style={{ width: 60, height: 40, background: '#1a1f36', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 700, fontStyle: 'italic' }}>VISA</div>
+                    <div>
+                      <div style={{ color: '#111827', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Visa ending in 4242</div>
+                      <div style={{ color: '#6b7280', fontSize: 13 }}>Expires 12/28</div>
+                    </div>
+                  </div>
+                  <button className="btn btn-sm" style={{ color: '#ef4444', fontWeight: 600 }}>Remove</button>
+                </div>
+                {/* Mock Card 2 */}
+                <div className="d-flex justify-content-between align-items-center" style={{ padding: '20px', border: '1px solid #e5e7eb', borderRadius: 12, background: 'white' }}>
+                  <div className="d-flex align-items-center gap-4">
+                    <div style={{ width: 60, height: 40, background: '#ff5f00', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 700, fontStyle: 'italic' }}>MC</div>
+                    <div>
+                      <div style={{ color: '#111827', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Mastercard ending in 5555</div>
+                      <div style={{ color: '#6b7280', fontSize: 13 }}>Expires 08/26</div>
+                    </div>
+                  </div>
+                  <button className="btn btn-sm" style={{ color: '#ef4444', fontWeight: 600 }}>Remove</button>
+                </div>
+              </div>
             </div>
           )}
 
           {activeTab === 'Pending payments' && (
-            <div className="text-center py-5" style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <FaRegClock size={60} color="#e5e7eb" style={{ marginBottom: 20 }} />
-              <h4 style={{ color: '#111827', fontWeight: 700 }}>No Pending Payments</h4>
-              <p style={{ color: '#6b7280', maxWidth: 400 }}>All your orders are fully paid. You have no pending invoices.</p>
+            <div className="py-4">
+              <h4 style={{ color: '#111827', fontWeight: 700, marginBottom: 20 }}>Pending Payments</h4>
+              <div style={{ border: '1px solid #e5e7eb', borderRadius: 12, overflow: 'hidden' }}>
+                <table className="table mb-0" style={{ fontSize: 14 }}>
+                  <thead style={{ background: '#f9fafb' }}>
+                    <tr>
+                      <th style={{ padding: '16px 20px', color: '#6b7280', fontWeight: 600, borderBottom: '1px solid #e5e7eb' }}>Invoice ID</th>
+                      <th style={{ padding: '16px 20px', color: '#6b7280', fontWeight: 600, borderBottom: '1px solid #e5e7eb' }}>Date</th>
+                      <th style={{ padding: '16px 20px', color: '#6b7280', fontWeight: 600, borderBottom: '1px solid #e5e7eb' }}>Amount</th>
+                      <th style={{ padding: '16px 20px', color: '#6b7280', fontWeight: 600, borderBottom: '1px solid #e5e7eb' }}>Status</th>
+                      <th style={{ padding: '16px 20px', color: '#6b7280', fontWeight: 600, borderBottom: '1px solid #e5e7eb', textAlign: 'right' }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colSpan="5" className="text-center py-5" style={{ color: '#6b7280' }}>
+                        <FaRegClock size={40} color="#e5e7eb" style={{ marginBottom: 15 }} />
+                        <div>No pending invoices found. All your payments are clear!</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
           {activeTab === 'Gift cards' && (
-            <div className="text-center py-5" style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <FaGift size={60} color="#e5e7eb" style={{ marginBottom: 20 }} />
-              <h4 style={{ color: '#111827', fontWeight: 700 }}>Gift Cards</h4>
-              <p style={{ color: '#6b7280', maxWidth: 400 }}>You don't have any active gift cards linked to your account.</p>
-              <button className="btn mt-3" style={{ border: '1px solid #8e1c2e', color: '#8e1c2e', padding: '10px 24px', borderRadius: 8, fontWeight: 600 }}>Redeem Gift Card</button>
+            <div className="py-4" style={{ maxWidth: 600, margin: '0 auto' }}>
+              <div style={{ background: 'linear-gradient(135deg, #8e1c2e 0%, #d32f2f 100%)', borderRadius: 16, padding: '30px', color: 'white', marginBottom: 30, boxShadow: '0 10px 20px rgba(142, 28, 46, 0.2)' }}>
+                <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 8 }}>Available Gift Card Balance</div>
+                <div style={{ fontSize: 36, fontWeight: 700 }}>₹ 0.00</div>
+              </div>
+              <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: 16, padding: '30px' }}>
+                <h5 style={{ fontWeight: 700, color: '#111827', marginBottom: 15 }}>Redeem a Gift Card</h5>
+                <p style={{ color: '#6b7280', fontSize: 14, marginBottom: 20 }}>Have a gift card code? Enter it below to add the funds to your wallet instantly.</p>
+                <div className="d-flex gap-2">
+                  <input type="text" className="form-control" placeholder="Enter 16-digit code" style={{ padding: '12px 16px', borderRadius: 8, border: '1px solid #d1d5db' }} />
+                  <button className="btn" style={{ background: '#111827', color: 'white', padding: '0 24px', borderRadius: 8, fontWeight: 600, whiteSpace: 'nowrap' }}>Redeem</button>
+                </div>
+              </div>
             </div>
           )}
 

@@ -15,6 +15,7 @@ const couponRoutes = require('./routes/couponRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const ticketRoutes = require('./routes/ticketRoutes');
 
 // Import middleware
 const { errorHandler } = require('./middleware/errorHandler');
@@ -66,6 +67,7 @@ app.use('/api/coupons', couponRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 // ─── 404 Handler ─────────────────────────────────────────────────────────────────
 app.use('*', (req, res) => {

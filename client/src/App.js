@@ -33,6 +33,7 @@ import ManageOrders from './pages/admin/ManageOrders';
 import ManageUsers from './pages/admin/ManageUsers';
 import ManageReviews from './pages/admin/ManageReviews';
 import ManageCoupons from './pages/admin/ManageCoupons';
+import AdminTickets from './pages/admin/AdminTickets';
 
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -124,6 +125,7 @@ function AppRoutes() {
           <Route path="/admin/users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
           <Route path="/admin/reviews" element={<AdminRoute><ManageReviews /></AdminRoute>} />
           <Route path="/admin/coupons" element={<AdminRoute><ManageCoupons /></AdminRoute>} />
+          <Route path="/admin/tickets" element={<AdminRoute><AdminTickets /></AdminRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>
