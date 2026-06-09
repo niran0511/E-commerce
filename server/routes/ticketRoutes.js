@@ -1,6 +1,7 @@
 const express = require('express');
 const { createTicket, getAdminTickets } = require('../controllers/ticketController');
-const { protect, admin } = require('../middleware/authMiddleware');
+const { protect } = require('../middleware/auth');
+const { admin } = require('../middleware/admin');
 
 const router = express.Router();
 
