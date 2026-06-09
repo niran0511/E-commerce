@@ -61,7 +61,7 @@ export default function ProductDetail() {
   const handleAddToCart = async () => {
     if (!isAuthenticated) { toast.error('Please login to add to cart'); navigate('/login'); return; }
     setAddingToCart(true);
-    try { await addToCart(id, quantity); toast.success('Added to cart!'); }
+    try { await addToCart(id, quantity); }
     catch (e) { toast.error('Failed to add to cart'); }
     finally { setAddingToCart(false); }
   };
