@@ -9,6 +9,7 @@ export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
+  const [dateFilter, setDateFilter] = useState('Select date range');
   const [currentPage, setCurrentPage] = useState(1);
   const LIMIT = 5;
   const navigate = useNavigate();
@@ -21,10 +22,28 @@ export default function Orders() {
   }, []);
 
   const filteredOrders = orders.filter(o => {
-    if (filter === 'All') return true;
-    if (filter === 'In Progress') return ['Processing', 'Confirmed', 'Shipped', 'OutForDelivery'].includes(o.orderStatus);
-    if (filter === 'Delivered') return o.orderStatus === 'Delivered';
-    if (filter === 'Cancelled') return ['Cancelled', 'Returned', 'Refunded'].includes(o.orderStatus);
+    // Status Filter
+    if (filter === 'In Progress' && !['Processing', 'Confirmed', 'Shipped', 'OutForDelivery'].includes(o.orderStatus)) return false;
+    if (filter === 'Delivered' && o.orderStatus !== 'Delivered') return false;
+    if (filter === 'Cancelled' && !['Cancelled', 'Returned', 'Refunded'].includes(o.orderStatus)) return false;
+
+    // Date Filter
+    if (dateFilter !== 'Select date range') {
+      const orderDate = new Date(o.createdAt);
+      const now = new Date();
+      if (dateFilter === 'Last 30 days') {
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        if (orderDate < thirtyDaysAgo) return false;
+      } else if (dateFilter === 'Last 6 months') {
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(now.getMonth() - 6);
+        if (orderDate < sixMonthsAgo) return false;
+      } else {
+        // Assume it's a specific year like "2023"
+        const year = parseInt(dateFilter, 10);
+        if (orderDate.getFullYear() !== year) return false;
+      }
+    }
     return true;
   });
 
@@ -127,11 +146,17 @@ export default function Orders() {
             </div>
             
             <div>
-              <select style={{ padding: '8px 16px', borderRadius: 20, border: '1px solid #e5e7eb', color: '#6b7280', fontSize: 13, outline: 'none', cursor: 'pointer' }}>
-                <option>Select date range</option>
-                <option>Last 30 days</option>
-                <option>Last 6 months</option>
-                <option>2023</option>
+              <select 
+                value={dateFilter}
+                onChange={(e) => { setDateFilter(e.target.value); setCurrentPage(1); }}
+                style={{ padding: '8px 16px', borderRadius: 20, border: '1px solid #e5e7eb', color: '#6b7280', fontSize: 13, outline: 'none', cursor: 'pointer' }}>
+                <option value="Select date range">Select date range</option>
+                <option value="Last 30 days">Last 30 days</option>
+                <option value="Last 6 months">Last 6 months</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
               </select>
             </div>
           </div>
