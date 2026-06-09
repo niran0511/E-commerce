@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ticketService from '../../../services/ticketService';
+import ticketService from '../../services/ticketService';
 import { toast } from 'react-toastify';
 
 export default function AdminTickets() {
