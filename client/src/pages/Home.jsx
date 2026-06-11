@@ -337,13 +337,27 @@ export default function Home() {
                 height: 520,
               }}>
                 {/* Glassmorphism product cards floating in 3D */}
-                {[
-                  { img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=300', label: 'Smart Watch', price: '₹4,999', rotate: 'rotateY(-8deg) rotateX(5deg)', top: '5%', left: '10%', delay: '0s', size: 180 },
-                  { img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=300', label: 'Headphones', price: '₹2,499', rotate: 'rotateY(12deg) rotateX(-3deg)', top: '15%', right: '5%', delay: '0.2s', size: 170 },
-                  { img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=300', label: 'Sneakers', price: '₹3,299', rotate: 'rotateY(-5deg) rotateX(8deg)', bottom: '8%', left: '25%', delay: '0.4s', size: 200 },
-                ].map((item, i) => (
+                {(featured.length >= 3 ? featured.slice(0, 3).map((p, i) => {
+                  const positions = [
+                    { rotate: 'rotateY(-8deg) rotateX(5deg)', top: '5%', left: '10%', delay: '0s', size: 180 },
+                    { rotate: 'rotateY(12deg) rotateX(-3deg)', top: '15%', right: '5%', delay: '0.2s', size: 170 },
+                    { rotate: 'rotateY(-5deg) rotateX(8deg)', bottom: '8%', left: '25%', delay: '0.4s', size: 200 }
+                  ];
+                  return {
+                    _id: p._id,
+                    img: p.images?.[0] || 'https://via.placeholder.com/300',
+                    label: p.name,
+                    price: `₹${p.price?.toLocaleString('en-IN')}`,
+                    ...positions[i]
+                  };
+                }) : [
+                  { _id: 'dummy1', img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=300', label: 'Smart Watch', price: '₹4,999', rotate: 'rotateY(-8deg) rotateX(5deg)', top: '5%', left: '10%', delay: '0s', size: 180 },
+                  { _id: 'dummy2', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=300', label: 'Headphones', price: '₹2,499', rotate: 'rotateY(12deg) rotateX(-3deg)', top: '15%', right: '5%', delay: '0.2s', size: 170 },
+                  { _id: 'dummy3', img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=300', label: 'Sneakers', price: '₹3,299', rotate: 'rotateY(-5deg) rotateX(8deg)', bottom: '8%', left: '25%', delay: '0.4s', size: 200 },
+                ]).map((item, i) => (
                   <div
-                    key={i}
+                    key={item._id || i}
+                    onClick={() => item._id.startsWith('dummy') ? navigate('/products') : navigate(`/products/${item._id}`)}
                     className="hero-float-card"
                     style={{
                       position: 'absolute',
