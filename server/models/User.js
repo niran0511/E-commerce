@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('../config/config');
 
 const addressSchema = new mongoose.Schema(
   {
@@ -17,6 +15,11 @@ const addressSchema = new mongoose.Schema(
 
 const userSchema = new mongoose.Schema(
   {
+    firebaseUid: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
     name: {
       type: String,
       required: [true, 'Name is required'],
@@ -33,8 +36,6 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
-      minlength: [6, 'Password must be at least 6 characters'],
       select: false,
     },
     phone: {
@@ -61,9 +62,9 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Hash password before saving
+// Hash password before saving (kept for backward compatibility)
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || !this.password) return next();
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -76,15 +77,6 @@ userSchema.pre('save', async function (next) {
 // Compare candidate password with stored hash
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
-};
-
-// Generate JWT auth token
-userSchema.methods.generateAuthToken = function () {
-  return jwt.sign(
-    { id: this._id, role: this.role },
-    config.jwtSecret,
-    { expiresIn: config.jwtExpire }
-  );
 };
 
 module.exports = mongoose.model('User', userSchema);

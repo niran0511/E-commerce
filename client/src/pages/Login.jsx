@@ -8,7 +8,8 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login, isAuthenticated, user, loading: authLoading } = useAuth();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { login, loginWithGoogle, isAuthenticated, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   // If already logged in, redirect based on role
@@ -25,12 +26,23 @@ export default function Login() {
     try {
       const result = await login(form.email, form.password);
       if (result?.success !== false) {
-        // Role-based redirect
         navigate(result.user?.role === 'admin' ? '/admin' : '/', { replace: true });
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid email or password');
+      toast.error('Invalid email or password');
     } finally { setLoading(false); }
+  };
+
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+    try {
+      const result = await loginWithGoogle();
+      if (result?.success) {
+        navigate(result.user?.role === 'admin' ? '/admin' : '/', { replace: true });
+      }
+    } catch (err) {
+      // Error already handled in AuthContext
+    } finally { setGoogleLoading(false); }
   };
 
   return (
@@ -97,17 +109,17 @@ export default function Login() {
 
           {/* Social Logins */}
           <div className="d-flex flex-column gap-3 mb-5">
-            <button type="button" onClick={() => toast.info('Google login coming soon!')} className="btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ background: 'white', border: '1px solid #d1d5db', borderRadius: 50, padding: '12px', fontSize: 13, fontWeight: 600, color: '#374151', transition: 'background 0.2s' }}>
-              <FaGoogle color="#DB4437" size={16} /> Login with Google
+            <button type="button" onClick={handleGoogleLogin} disabled={googleLoading} className="btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ background: 'white', border: '1px solid #d1d5db', borderRadius: 50, padding: '12px', fontSize: 13, fontWeight: 600, color: '#374151', transition: 'background 0.2s' }}>
+              {googleLoading ? <><span className="spinner-border spinner-border-sm me-2" />Connecting...</> : <><FaGoogle color="#DB4437" size={16} /> Login with Google</>}
             </button>
             <button type="button" onClick={() => toast.info('Facebook login coming soon!')} className="btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ background: 'white', border: '1px solid #d1d5db', borderRadius: 50, padding: '12px', fontSize: 13, fontWeight: 600, color: '#374151', transition: 'background 0.2s' }}>
               <FaFacebook color="#4267B2" size={16} /> Login with Facebook
             </button>
           </div>
 
-          {/* Admin Demo Credentials helper */}
-          <div className="text-center" style={{ fontSize: 11, color: '#9ca3af' }}>
-            Demo: admin@shop.com / admin123 | <Link to="/register" style={{ color: '#f97316', textDecoration: 'none', fontWeight: 600 }}>Register</Link>
+          {/* Register link */}
+          <div className="text-center" style={{ fontSize: 13, color: '#6b7280' }}>
+            Don't have an account? <Link to="/register" style={{ color: '#f97316', textDecoration: 'none', fontWeight: 700 }}>Register</Link>
           </div>
         </div>
       </div>

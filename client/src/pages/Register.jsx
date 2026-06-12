@@ -9,7 +9,8 @@ export default function Register() {
   const [showPwd, setShowPwd] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -21,14 +22,24 @@ export default function Register() {
     setLoading(true);
     try {
       const result = await register(form.name, form.email, form.password);
-      // AuthContext catches errors internally and returns { success: false } — don't throw
       if (result?.success !== false) {
         navigate('/');
       }
-      // If failed, AuthContext already showed error toast
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed');
+      toast.error('Registration failed');
     } finally { setLoading(false); }
+  };
+
+  const handleGoogleSignUp = async () => {
+    setGoogleLoading(true);
+    try {
+      const result = await loginWithGoogle();
+      if (result?.success) {
+        navigate(result.user?.role === 'admin' ? '/admin' : '/', { replace: true });
+      }
+    } catch (err) {
+      // Error already handled in AuthContext
+    } finally { setGoogleLoading(false); }
   };
 
   const update = (k, v) => setForm(p => ({ ...p, [k]: v }));
@@ -109,8 +120,8 @@ export default function Register() {
 
           {/* Social Logins */}
           <div className="d-flex flex-column gap-3 mb-4">
-            <button type="button" onClick={() => toast.info('Google registration coming soon!')} className="btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ background: 'white', border: '1px solid #d1d5db', borderRadius: 50, padding: '12px', fontSize: 13, fontWeight: 600, color: '#374151', transition: 'background 0.2s' }}>
-              <FaGoogle color="#DB4437" size={16} /> Sign up with Google
+            <button type="button" onClick={handleGoogleSignUp} disabled={googleLoading} className="btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ background: 'white', border: '1px solid #d1d5db', borderRadius: 50, padding: '12px', fontSize: 13, fontWeight: 600, color: '#374151', transition: 'background 0.2s' }}>
+              {googleLoading ? <><span className="spinner-border spinner-border-sm me-2" />Connecting...</> : <><FaGoogle color="#DB4437" size={16} /> Sign up with Google</>}
             </button>
             <button type="button" onClick={() => toast.info('Facebook registration coming soon!')} className="btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ background: 'white', border: '1px solid #d1d5db', borderRadius: 50, padding: '12px', fontSize: 13, fontWeight: 600, color: '#374151', transition: 'background 0.2s' }}>
               <FaFacebook color="#4267B2" size={16} /> Sign up with Facebook

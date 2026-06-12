@@ -1,29 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const {
-  register,
-  login,
-  forgotPassword,
-  verifyOTP,
-  resetPassword,
+  firebaseSync,
   getProfile,
   updateProfile,
   logout,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
-const { authLimiter } = require('../middleware/rateLimiter');
-const {
-  registerValidation,
-  loginValidation,
-  validate,
-} = require('../middleware/validate');
 
-// Public routes (with auth rate limiter)
-router.post('/register', authLimiter, registerValidation, validate, register);
-router.post('/login', authLimiter, loginValidation, validate, login);
-router.post('/forgot-password', authLimiter, forgotPassword);
-router.post('/verify-otp', authLimiter, verifyOTP);
-router.post('/reset-password', resetPassword);
+// Public route — syncs Firebase user with MongoDB
+router.post('/firebase-sync', firebaseSync);
 
 // Protected routes
 router.get('/profile', protect, getProfile);

@@ -1,6 +1,15 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import {
+  onAuthStateChanged,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  updateProfile as firebaseUpdateProfile,
+} from 'firebase/auth';
+import { auth, googleProvider } from '../firebase';
 
 const AuthContext = createContext();
 
@@ -16,7 +25,8 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem('shopsmart-token'));
+  const [firebaseUser, setFirebaseUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const isAuthenticated = !!token && !!user;
@@ -33,70 +43,137 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Fetch user profile on mount if token exists
-  const fetchUser = useCallback(async () => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+  // Sync user with backend (find-or-create MongoDB user from Firebase user)
+  const syncUserWithBackend = useCallback(async (idToken) => {
     try {
-      const res = await axios.get(`${API_URL}/auth/profile`);
-      setUser(res.data?.data?.user || res.data?.user || res.data);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${idToken}`;
+      const res = await axios.post(`${API_URL}/auth/firebase-sync`);
+      const userData = res.data?.data?.user;
+      setUser(userData);
+      setToken(idToken);
+      return userData;
     } catch (error) {
-      console.error('Failed to fetch user:', error);
+      console.error('Failed to sync user with backend:', error);
       setToken(null);
       setUser(null);
-    } finally {
-      setLoading(false);
+      return null;
     }
-  }, [token]);
+  }, []);
 
+  // Listen for Firebase auth state changes
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+      if (fbUser) {
+        setFirebaseUser(fbUser);
+        const idToken = await fbUser.getIdToken();
+        await syncUserWithBackend(idToken);
+      } else {
+        setFirebaseUser(null);
+        setUser(null);
+        setToken(null);
+      }
+      setLoading(false);
+    });
 
+    return () => unsubscribe();
+  }, [syncUserWithBackend]);
+
+  // Refresh Firebase token periodically (tokens expire every 1 hour)
+  useEffect(() => {
+    if (!firebaseUser) return;
+    const interval = setInterval(async () => {
+      try {
+        const newToken = await firebaseUser.getIdToken(true);
+        setToken(newToken);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      } catch (err) {
+        console.error('Token refresh failed:', err);
+      }
+    }, 50 * 60 * 1000); // Refresh every 50 minutes
+    return () => clearInterval(interval);
+  }, [firebaseUser]);
+
+  // Google Sign-In
+  const loginWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+      const userData = await syncUserWithBackend(idToken);
+      if (userData) {
+        toast.success(`Welcome, ${userData.name}! 🎉`);
+        return { success: true, user: userData };
+      }
+      throw new Error('Sync failed');
+    } catch (error) {
+      if (error.code === 'auth/popup-closed-by-user') return { success: false };
+      const message = error.message || 'Google sign-in failed';
+      toast.error(message);
+      return { success: false, message };
+    }
+  };
+
+  // Email/Password Login
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
-      // Backend returns: { success: true, data: { user, token } }
-      const { token: newToken, user: userData } = res.data?.data || {};
-      if (!newToken || !userData) throw new Error('Invalid response from server');
-      setToken(newToken);
-      setUser(userData);
-      localStorage.setItem('shopsmart-token', newToken);
-      toast.success(`Welcome back, ${userData.name}! 🎉`);
-      return { success: true, user: userData };
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await result.user.getIdToken();
+      const userData = await syncUserWithBackend(idToken);
+      if (userData) {
+        toast.success(`Welcome back, ${userData.name}! 🎉`);
+        return { success: true, user: userData };
+      }
+      throw new Error('Sync failed');
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed. Please try again.';
+      let message = 'Login failed. Please try again.';
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        message = 'Invalid email or password';
+      } else if (error.code === 'auth/too-many-requests') {
+        message = 'Too many failed attempts. Please try again later.';
+      }
       toast.error(message);
       return { success: false, message };
     }
   };
 
+  // Email/Password Registration
   const register = async (name, email, password) => {
     try {
-      const res = await axios.post(`${API_URL}/auth/register`, { name, email, password });
-      // Backend returns: { success: true, data: { user, token } }
-      const { token: newToken, user: userData } = res.data?.data || {};
-      if (!newToken || !userData) throw new Error('Invalid response from server');
-      setToken(newToken);
-      setUser(userData);
-      localStorage.setItem('shopsmart-token', newToken);
-      toast.success('Account created successfully! 🎉');
-      return { success: true, user: userData };
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      // Set display name on Firebase profile
+      await firebaseUpdateProfile(result.user, { displayName: name });
+      const idToken = await result.user.getIdToken();
+      const userData = await syncUserWithBackend(idToken);
+      if (userData) {
+        toast.success('Account created successfully! 🎉');
+        return { success: true, user: userData };
+      }
+      throw new Error('Sync failed');
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      let message = 'Registration failed. Please try again.';
+      if (error.code === 'auth/email-already-in-use') {
+        message = 'An account with this email already exists';
+      } else if (error.code === 'auth/weak-password') {
+        message = 'Password should be at least 6 characters';
+      }
       toast.error(message);
       return { success: false, message };
     }
   };
 
-  const logout = useCallback(() => {
+  // Logout
+  const logout = useCallback(async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error('Sign out error:', e);
+    }
     setToken(null);
     setUser(null);
+    setFirebaseUser(null);
     toast.info('You have been logged out.');
   }, []);
 
+  // Update profile (backend only — name, phone, addresses etc.)
   const updateProfile = async (profileData) => {
     try {
       const res = await axios.put(`${API_URL}/auth/profile`, profileData);
@@ -110,29 +187,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Change password (not applicable for Google-only users)
   const changePassword = async (currentPassword, newPassword) => {
+    toast.info('Please use "Forgot Password" to reset your password.');
+    return { success: false, message: 'Use forgot password flow.' };
+  };
+
+  // Forgot password
+  const forgotPassword = async (email) => {
     try {
-      await axios.put(`${API_URL}/auth/change-password`, { currentPassword, newPassword });
-      toast.success('Password changed successfully!');
+      const { sendPasswordResetEmail } = await import('firebase/auth');
+      await sendPasswordResetEmail(auth, email);
+      toast.success('Password reset link sent to your email!');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.message || 'Password change failed.';
+      let message = 'Failed to send reset link.';
+      if (error.code === 'auth/user-not-found') message = 'No account found with this email.';
       toast.error(message);
       return { success: false, message };
     }
   };
 
-  const forgotPassword = async (email) => {
+  const fetchUser = useCallback(async () => {
+    if (!token) return;
     try {
-      await axios.post(`${API_URL}/auth/forgot-password`, { email });
-      toast.success('Password reset link sent to your email!');
-      return { success: true };
-    } catch (error) {
-      const message = error.response?.data?.message || 'Failed to send reset link.';
-      toast.error(message);
-      return { success: false, message };
+      const res = await axios.get(`${API_URL}/auth/profile`);
+      setUser(res.data?.data?.user || res.data?.user || res.data);
+    } catch (err) {
+      console.error('Failed to fetch user:', err);
     }
-  };
+  }, [token]);
 
   const value = {
     user,
@@ -141,6 +225,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
     isAdmin,
     login,
+    loginWithGoogle,
     register,
     logout,
     updateProfile,

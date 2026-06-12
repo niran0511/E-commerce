@@ -1,10 +1,9 @@
-const jwt = require('jsonwebtoken');
+const { auth: firebaseAuth } = require('../config/firebaseAdmin');
 const User = require('../models/User');
-const config = require('../config/config');
 
 /**
- * Protect routes – verifies JWT from Authorization header.
- * Attaches the authenticated user to req.user.
+ * Protect routes – verifies Firebase ID token from Authorization header.
+ * Finds or creates the user in MongoDB and attaches to req.user.
  */
 const protect = async (req, res, next) => {
   try {
@@ -22,16 +21,16 @@ const protect = async (req, res, next) => {
       });
     }
 
-    // Verify token
-    const decoded = jwt.verify(token, config.jwtSecret);
+    // Verify Firebase ID token
+    const decoded = await firebaseAuth.verifyIdToken(token);
 
-    // Find the user and attach to request
-    const user = await User.findById(decoded.id);
+    // Find user by Firebase UID
+    const user = await User.findOne({ firebaseUid: decoded.uid });
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized – user no longer exists',
+        message: 'Not authorized – user not found. Please sign in again.',
       });
     }
 
@@ -45,13 +44,15 @@ const protect = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    if (error.name === 'TokenExpiredError') {
+    console.error('Auth middleware error:', error.message);
+
+    if (error.code === 'auth/id-token-expired') {
       return res.status(401).json({
         success: false,
         message: 'Token has expired. Please log in again.',
       });
     }
-    if (error.name === 'JsonWebTokenError') {
+    if (error.code === 'auth/argument-error' || error.code === 'auth/id-token-revoked') {
       return res.status(401).json({
         success: false,
         message: 'Invalid token. Please log in again.',
