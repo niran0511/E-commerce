@@ -6,6 +6,7 @@ const {
   getFeaturedProducts,
   getNewArrivals,
   getBestSellers,
+  getHeroProducts,
   getCategories,
   searchProducts,
   getRelatedProducts,
@@ -13,6 +14,7 @@ const {
 
 // All product routes are public
 router.get('/search', searchProducts);
+router.get('/hero', getHeroProducts);
 router.get('/featured', getFeaturedProducts);
 router.get('/new-arrivals', getNewArrivals);
 router.get('/best-sellers', getBestSellers);

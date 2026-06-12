@@ -17,14 +17,14 @@ const adminService = {
   // Dashboard
   getDashboard: () => api.get('/admin/dashboard'),
 
-  // Products
   getProducts: (params = {}) => {
     const queryStr = new URLSearchParams(params).toString();
-    return api.get(`/admin/products?${queryStr}`);
+    return api.get(`/products?${queryStr}`);
   },
   addProduct: (data) => api.post('/admin/products', data),
   updateProduct: (id, data) => api.put(`/admin/products/${id}`, data),
   deleteProduct: (id) => api.delete(`/admin/products/${id}`),
+  setHeroProducts: (data) => api.put('/admin/hero', data),
 
   // Orders
   getAllOrders: (params = {}) => {

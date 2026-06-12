@@ -712,6 +712,38 @@ const deleteCategory = async (req, res, next) => {
   }
 };
 
+// @desc    Set exactly 3 hero products
+// @route   PUT /api/admin/hero
+// @access  Private/Admin
+const setHeroProducts = async (req, res, next) => {
+  try {
+    const { productIds } = req.body;
+
+    if (!productIds || !Array.isArray(productIds) || productIds.length !== 3) {
+      return res.status(400).json({
+        success: false,
+        message: 'You must provide exactly 3 product IDs for the hero section.',
+      });
+    }
+
+    // Reset all products to isHero = false
+    await Product.updateMany({}, { $set: { isHero: false } });
+
+    // Set the chosen 3 products to isHero = true
+    await Product.updateMany(
+      { _id: { $in: productIds } },
+      { $set: { isHero: true } }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Hero products updated successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getDashboard,
   addProduct,
@@ -731,4 +763,5 @@ module.exports = {
   addCategory,
   updateCategory,
   deleteCategory,
+  setHeroProducts,
 };

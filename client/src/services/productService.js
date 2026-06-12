@@ -19,6 +19,7 @@ const productService = {
     return api.get(`/products?${queryStr}`);
   },
   getProductById: (id) => api.get(`/products/${id}`),
+  getHeroProducts: () => api.get('/products/hero'),
   // Use dedicated backend routes that return { data: { products: [] } }
   getFeatured: () => api.get('/products/featured'),
   getNewArrivals: () => api.get('/products/new-arrivals'),

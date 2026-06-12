@@ -106,14 +106,18 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  const [heroProducts, setHeroProducts] = useState([]);
+
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [f, n, b] = await Promise.all([
+        const [h, f, n, b] = await Promise.all([
+          productService.getHeroProducts(),
           productService.getFeatured(),
           productService.getNewArrivals(),
           productService.getBestSellers(),
         ]);
+        setHeroProducts(h.data?.data?.products || []);
         setFeatured(f.data?.data?.products || []);
         setNewArrivals(n.data?.data?.products || []);
         setBestSellers(b.data?.data?.products || []);
@@ -337,7 +341,7 @@ export default function Home() {
                 height: 520,
               }}>
                 {/* Glassmorphism product cards floating in 3D */}
-                {(featured.length >= 3 ? featured.slice(0, 3).map((p, i) => {
+                {(heroProducts.length >= 3 ? heroProducts.slice(0, 3).map((p, i) => {
                   const positions = [
                     { rotate: 'rotateY(-8deg) rotateX(5deg)', top: '5%', left: '10%', delay: '0s', size: 180 },
                     { rotate: 'rotateY(12deg) rotateX(-3deg)', top: '15%', right: '5%', delay: '0.2s', size: 170 },

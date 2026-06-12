@@ -19,6 +19,7 @@ const {
   addCategory,
   updateCategory,
   deleteCategory,
+  setHeroProducts,
 } = require('../controllers/adminController');
 const { protect } = require('../middleware/auth');
 const { admin } = require('../middleware/admin');
@@ -30,6 +31,9 @@ const {
 
 // All admin routes require authentication + admin role
 router.use(protect, admin);
+
+// Hero setup
+router.put('/hero', setHeroProducts);
 
 // Dashboard
 router.get('/dashboard', getDashboard);

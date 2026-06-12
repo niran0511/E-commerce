@@ -13,6 +13,7 @@ const NAV = [
   { path: '/admin/orders',   label: 'Orders',    icon: <FaShoppingBag size={16} /> },
   { path: '/admin/coupons',  label: 'Coupons',   icon: <FaTicketAlt size={16} /> },
   { path: '/admin/tickets',  label: 'Support Tickets', icon: <FaHeadset size={16} /> },
+  { path: '/admin/hero',     label: 'Hero Setup', icon: <FaStar size={16} /> },
   { path: '/admin/users',    label: 'Users',     icon: <FaUsers size={16} /> },
   { path: '/admin/reviews',  label: 'Reviews',   icon: <FaStar size={16} /> },
 ];

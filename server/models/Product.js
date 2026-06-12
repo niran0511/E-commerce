@@ -119,6 +119,10 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isHero: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

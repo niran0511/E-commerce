@@ -273,12 +273,34 @@ const getRelatedProducts = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Get hero products
+ * @route   GET /api/products/hero
+ * @access  Public
+ */
+const getHeroProducts = async (req, res, next) => {
+  try {
+    const products = await Product.find({ isHero: true })
+      .populate('category', 'name slug')
+      .limit(3)
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      data: { products },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
   getFeaturedProducts,
   getNewArrivals,
   getBestSellers,
+  getHeroProducts,
   getCategories,
   searchProducts,
   getRelatedProducts,
