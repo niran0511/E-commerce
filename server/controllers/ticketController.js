@@ -5,15 +5,16 @@ const SupportTicket = require('../models/SupportTicket');
 // @access  Private
 const createTicket = async (req, res, next) => {
   try {
-    const { issueType, message } = req.body;
+    const { issueType, message, phone } = req.body;
 
-    if (!issueType || !message) {
-      return res.status(400).json({ success: false, message: 'Please provide issueType and message' });
+    if (!issueType || !message || !phone) {
+      return res.status(400).json({ success: false, message: 'Please provide issueType, phone, and message' });
     }
 
     const ticket = await SupportTicket.create({
       user: req.user._id,
       issueType,
+      phone,
       message,
     });
 
@@ -29,7 +30,7 @@ const createTicket = async (req, res, next) => {
 const getAdminTickets = async (req, res, next) => {
   try {
     const tickets = await SupportTicket.find()
-      .populate('user', 'name email')
+      .populate('user', 'name email phone')
       .sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, data: { tickets } });

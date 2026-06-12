@@ -15,6 +15,7 @@ export default function Orders() {
   const [currentPage, setCurrentPage] = useState(1);
   const [ticketIssueType, setTicketIssueType] = useState('Order Mistake');
   const [ticketMessage, setTicketMessage] = useState('');
+  const [ticketPhone, setTicketPhone] = useState('');
   const [ticketLoading, setTicketLoading] = useState(false);
   const LIMIT = 5;
   const navigate = useNavigate();
@@ -248,12 +249,14 @@ export default function Orders() {
               </div>
               <form onSubmit={async (e) => {
                 e.preventDefault();
+                if (!ticketPhone) return toast.error('Please enter a mobile number');
                 if (!ticketMessage) return toast.error('Please enter a message');
                 setTicketLoading(true);
                 try {
-                  await ticketService.createTicket({ issueType: ticketIssueType, message: ticketMessage });
+                  await ticketService.createTicket({ issueType: ticketIssueType, message: ticketMessage, phone: ticketPhone });
                   toast.success('Message sent to Admin successfully!');
                   setTicketMessage('');
+                  setTicketPhone('');
                 } catch (err) {
                   toast.error('Failed to send message');
                 } finally {
@@ -271,6 +274,15 @@ export default function Orders() {
                     <option value="Product Quality">Product Quality / Damage</option>
                     <option value="Other">Other</option>
                   </select>
+                </div>
+                <div className="mb-3">
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>Contact Number</label>
+                  <input 
+                    type="tel"
+                    value={ticketPhone} onChange={e => setTicketPhone(e.target.value)}
+                    className="form-control" placeholder="Enter your mobile number..." 
+                    style={{ padding: '12px', borderRadius: 8, border: '1px solid var(--border-color)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: 14 }}
+                  />
                 </div>
                 <div className="mb-4">
                   <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>Message Details</label>

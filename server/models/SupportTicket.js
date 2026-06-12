@@ -12,6 +12,10 @@ const supportTicketSchema = new mongoose.Schema(
       required: true,
       enum: ['Order Mistake', 'Payment Issue', 'Delivery Delay', 'Product Quality', 'Other'],
     },
+    phone: {
+      type: String,
+      required: true,
+    },
     message: {
       type: String,
       required: true,
