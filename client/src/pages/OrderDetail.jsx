@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaTruck, FaCheckCircle, FaTimesCircle, FaMapMarkerAlt } from 'react-icons/fa';
 import BreadcrumbNav from '../components/common/Breadcrumb';
@@ -186,9 +186,13 @@ export default function OrderDetail() {
               <h6 className="fw-bold mb-3" style={{ color: 'var(--text-primary)' }}>Items Ordered ({order.items?.length})</h6>
               {order.items?.map((item, i) => (
                 <div key={i} className="d-flex align-items-center gap-3 mb-3">
-                  <img src={item.image || 'https://placehold.co/60x60?text=P'} alt={item.name} style={{ width: 64, height: 64, objectFit: 'contain', borderRadius: 10, background: 'var(--bg-secondary)', padding: 6, border: '1px solid var(--border-color)' }} />
+                  <Link to={`/products/${item.product?._id || item.product}`}>
+                    <img src={item.image || 'https://placehold.co/60x60?text=P'} onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/64x64?text=Image+Not+Found'; }} alt={item.name} style={{ width: 64, height: 64, objectFit: 'contain', borderRadius: 10, background: 'var(--bg-secondary)', padding: 6, border: '1px solid var(--border-color)', objectPosition: 'center' }} />
+                  </Link>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>{item.name}</div>
+                    <Link to={`/products/${item.product?._id || item.product}`} style={{ textDecoration: 'none' }}>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 14 }}>{item.name}</div>
+                    </Link>
                     <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Qty: {item.quantity} × ₹{item.price?.toLocaleString('en-IN')}</div>
                   </div>
                   <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>₹{(item.price * item.quantity).toLocaleString('en-IN')}</div>

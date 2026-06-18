@@ -384,14 +384,18 @@ export default function Checkout() {
               <div className="mb-4">
                 {activeItems.map(item => (
                   <div key={item._id} className="d-flex align-items-center gap-3 mb-4">
-                    <div style={{ width: 80, height: 80, background: '#f9fafb', borderRadius: 8, padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <img src={item.product?.images?.[0] || `https://picsum.photos/seed/${item.product?._id}/64/64`}
-                        alt={item.product?.name}
-                        onError={e => { e.target.src = `https://picsum.photos/seed/${item.product?.name}/64/64`; }}
-                        style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                    </div>
+                    <Link to={`/products/${item.product?._id}`} style={{ display: 'block' }}>
+                      <div style={{ width: 80, height: 80, background: '#f9fafb', borderRadius: 8, padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <img src={item.product?.images?.[0] || `https://placehold.co/64x64?text=P`}
+                          alt={item.product?.name}
+                          onError={e => { e.target.onerror = null; e.target.src = `https://placehold.co/64x64?text=Image+Not+Found`; }}
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      </div>
+                    </Link>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 700, color: '#111827', fontSize: 15, marginBottom: 4 }}>{item.product?.name}</div>
+                      <Link to={`/products/${item.product?._id}`} style={{ textDecoration: 'none' }}>
+                        <div style={{ fontWeight: 700, color: '#111827', fontSize: 15, marginBottom: 4 }}>{item.product?.name}</div>
+                      </Link>
                       {item.product?.brand && <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 2 }}>Brand: {item.product.brand}</div>}
                       <div style={{ fontSize: 13, color: '#6b7280' }}>Qty: {item.quantity}</div>
                     </div>
