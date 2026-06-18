@@ -80,6 +80,7 @@ export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
   const [bestSellers, setBestSellers] = useState([]);
+  const [mobilePhones, setMobilePhones] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { isDark } = useTheme();
@@ -111,16 +112,18 @@ export default function Home() {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [h, f, n, b] = await Promise.all([
+        const [h, f, n, b, m] = await Promise.all([
           productService.getHeroProducts(),
           productService.getFeatured(),
           productService.getNewArrivals(),
           productService.getBestSellers(),
+          productService.getProducts({ search: 'mobile', limit: 8 }),
         ]);
         setHeroProducts(h.data?.data?.products || []);
         setFeatured(f.data?.data?.products || []);
         setNewArrivals(n.data?.data?.products || []);
         setBestSellers(b.data?.data?.products || []);
+        setMobilePhones(m.data?.data?.products || []);
       } catch (e) { console.error(e); }
       finally { setLoading(false); }
     };
@@ -589,6 +592,34 @@ export default function Home() {
           <div className="row g-3">
             {loading ? Array(4).fill(0).map((_, i) => <div key={i} className="col-6 col-md-4 col-lg-3"><SkeletonCard /></div>)
               : bestSellers.slice(0, 8).map((p, i) => (
+                <Reveal key={p._id} delay={i * 0.08} className="col-6 col-md-4 col-lg-3">
+                  <ProductCard product={p} />
+                </Reveal>
+              ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════
+          MOBILE PHONES
+         ═══════════════════════════════════════════════════════════ */}
+      <section className="py-5" style={{ background: 'var(--surface)' }}>
+        <div className="container">
+          <Reveal>
+            <div className="d-flex justify-content-between align-items-end mb-4">
+              <div>
+                <div className="d-flex align-items-center gap-2 mb-1">
+                  <span style={{ fontSize: 16 }}>📱</span>
+                  <span style={{ color: 'var(--primary)', fontWeight: 600, fontSize: 13 }}>LATEST TECH</span>
+                </div>
+                <h2 className="section-title mb-0">Mobile Phones</h2>
+              </div>
+              <Link to="/products?search=mobile" className="btn btn-outline-primary btn-sm rounded-3 d-flex align-items-center gap-1">View All <FaArrowRight size={12} /></Link>
+            </div>
+          </Reveal>
+          <div className="row g-3">
+            {loading ? Array(4).fill(0).map((_, i) => <div key={i} className="col-6 col-md-4 col-lg-3"><SkeletonCard /></div>)
+              : mobilePhones.slice(0, 8).map((p, i) => (
                 <Reveal key={p._id} delay={i * 0.08} className="col-6 col-md-4 col-lg-3">
                   <ProductCard product={p} />
                 </Reveal>
