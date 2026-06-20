@@ -24,8 +24,8 @@ export default function Cart() {
   if (activeItems.length === 0 && savedForLaterItems.length === 0) return (
     <div className="container py-5 text-center" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ fontSize: 100, marginBottom: 24 }}>🛒</div>
-      <h2 style={{ color: '#111827', fontFamily: "'Inter', sans-serif", fontWeight: 800 }}>Your cart is empty</h2>
-      <p style={{ color: '#6b7280', fontSize: 16, marginBottom: 28 }}>Looks like you haven't added anything yet. Explore our amazing products!</p>
+      <h2 style={{ color: 'var(--text-primary)', fontFamily: "'Inter', sans-serif", fontWeight: 800 }}>Your cart is empty</h2>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 16, marginBottom: 28 }}>Looks like you haven't added anything yet. Explore our amazing products!</p>
       <button className="btn btn-lg rounded-pill px-4" onClick={() => navigate('/products')} style={{ background: '#ff5722', color: 'white' }}>
         <FaShoppingBag className="me-2" /> Continue Shopping
       </button>
@@ -33,22 +33,22 @@ export default function Cart() {
   );
 
   return (
-    <div style={{ background: '#fafafa', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ background: 'var(--bg-primary)', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
       <div className="container-fluid px-3 px-md-4 py-4" style={{ maxWidth: 1400 }}>
         <BreadcrumbNav items={[{ label: 'Home', path: '/' }, { label: 'Cart' }]} />
-        <h1 style={{ fontWeight: 800, color: '#111827', fontSize: '1.8rem', marginBottom: 24 }}>
-          Shopping Cart <span style={{ fontSize: 16, color: '#6b7280', fontWeight: 400 }}>({activeItems.length} items)</span>
+        <h1 style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: '1.8rem', marginBottom: 24 }}>
+          Shopping Cart <span style={{ fontSize: 16, color: 'var(--text-secondary)', fontWeight: 400 }}>({activeItems.length} items)</span>
         </h1>
 
         <div className="row g-4">
           <div className="col-lg-8">
             {/* Cart Items */}
             {activeItems.length > 0 && (
-              <div className="custom-card mb-4" style={{ background: 'white', borderRadius: 16, border: '1px solid #f3f4f6', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+              <div className="custom-card mb-4" style={{ background: 'var(--surface)', borderRadius: 16, border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
                 {activeItems.map((item, i) => (
                   <div key={item._id || i}>
                     <CartItem item={item} onUpdateQty={updateQuantity} onRemove={removeFromCart} onSaveForLater={toggleSaveForLater} />
-                    {i < activeItems.length - 1 && <hr style={{ margin: 0, borderColor: '#f3f4f6' }} />}
+                    {i < activeItems.length - 1 && <hr style={{ margin: 0, borderColor: 'var(--border-color)' }} />}
                   </div>
                 ))}
               </div>
@@ -57,12 +57,12 @@ export default function Cart() {
             {/* Saved for Later */}
             {savedForLaterItems.length > 0 && (
               <div>
-                <h5 style={{ color: '#111827', fontWeight: 700, marginBottom: 16 }}>Saved for Later ({savedForLaterItems.length})</h5>
-                <div className="custom-card" style={{ background: 'white', borderRadius: 16, border: '1px solid #f3f4f6', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <h5 style={{ color: 'var(--text-primary)', fontWeight: 700, marginBottom: 16 }}>Saved for Later ({savedForLaterItems.length})</h5>
+                <div className="custom-card" style={{ background: 'var(--surface)', borderRadius: 16, border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)' }}>
                   {savedForLaterItems.map((item, i) => (
                     <div key={item._id || i}>
                       <CartItem item={item} onUpdateQty={updateQuantity} onRemove={removeFromCart} onSaveForLater={toggleSaveForLater} />
-                      {i < savedForLaterItems.length - 1 && <hr style={{ margin: 0, borderColor: '#f3f4f6' }} />}
+                      {i < savedForLaterItems.length - 1 && <hr style={{ margin: 0, borderColor: 'var(--border-color)' }} />}
                     </div>
                   ))}
                 </div>

@@ -185,13 +185,13 @@ export default function Checkout() {
   const inputStyle = {
     width: '100%',
     padding: '14px 16px',
-    border: '1px solid #e5e7eb',
+    border: '1px solid var(--border-color)',
     borderRadius: '8px',
     fontSize: '14px',
     outline: 'none',
     transition: 'border-color 0.2s',
-    background: 'white',
-    color: '#111827'
+    background: 'var(--surface)',
+    color: 'var(--text-primary)'
   };
 
   if (orderSuccess) return (
@@ -205,18 +205,18 @@ export default function Checkout() {
       </p>
       <div className="d-flex gap-3 justify-content-center flex-wrap mt-4">
         <button className="btn btn-lg" onClick={() => navigate('/orders')} style={{ background: '#ea580c', color: 'white', borderRadius: 8, padding: '12px 28px', fontWeight: 600 }}>View My Orders</button>
-        <button className="btn btn-lg" onClick={() => navigate('/products')} style={{ border: '1px solid #e5e7eb', color: '#374151', background: 'white', borderRadius: 8, padding: '12px 28px', fontWeight: 600 }}>Continue Shopping</button>
+        <button className="btn btn-lg" onClick={() => navigate('/products')} style={{ border: '1px solid var(--border-color)', color: 'var(--text-primary)', background: 'var(--surface)', borderRadius: 8, padding: '12px 28px', fontWeight: 600 }}>Continue Shopping</button>
       </div>
     </div>
   );
 
   return (
-    <div style={{ background: '#fafafa', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ background: 'var(--bg-primary)', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
       
       {/* Top Header */}
-      <div style={{ background: 'white', borderBottom: '1px solid #f3f4f6', padding: '16px 0' }}>
+      <div style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border-color)', padding: '16px 0' }}>
         <div className="container" style={{ maxWidth: 1100, display: 'flex', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: 22, letterSpacing: 1, color: '#111827' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: 22, letterSpacing: 1, color: 'var(--text-primary)' }}>
             <span style={{ color: '#ff5722' }}>🛍️</span> ShopSmart
           </div>
         </div>
@@ -229,7 +229,7 @@ export default function Checkout() {
           <Link to="/cart" style={{ color: '#ea580c', textDecoration: 'none', fontWeight: 600, fontSize: 15, display: 'flex', alignItems: 'center', gap: 8 }}>
             <span>←</span> Back to Cart
           </Link>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#6b7280', fontSize: 14, fontWeight: 500 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-secondary)', fontSize: 14, fontWeight: 500 }}>
             <FaLock /> Secure Checkout
           </div>
         </div>
@@ -237,7 +237,7 @@ export default function Checkout() {
         <div className="row g-5">
           {/* Left Column: Form */}
           <div className="col-lg-7">
-            <h1 style={{ fontWeight: 800, fontSize: 32, color: '#111827', marginBottom: 24 }}>Checkout</h1>
+            <h1 style={{ fontWeight: 800, fontSize: 32, color: 'var(--text-primary)', marginBottom: 24 }}>Checkout</h1>
             
             {/* Stepper */}
             <div className="d-flex align-items-center mb-5">
@@ -246,18 +246,18 @@ export default function Checkout() {
                   <div className="d-flex align-items-center gap-2" style={{ cursor: i < step ? 'pointer' : 'default' }} onClick={() => i < step && setStep(i)}>
                     <div style={{
                       width: 28, height: 28, borderRadius: '50%',
-                      background: i === step ? '#ea580c' : (i < step ? 'white' : 'white'),
-                      border: `1px solid ${i <= step ? '#ea580c' : '#d1d5db'}`,
+                      background: i === step ? '#ea580c' : 'var(--surface)',
+                      border: `1px solid ${i <= step ? '#ea580c' : 'var(--border-color)'}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: i === step ? 'white' : (i < step ? '#ea580c' : '#9ca3af'),
+                      color: i === step ? 'white' : (i < step ? '#ea580c' : 'var(--text-muted)'),
                       fontWeight: 600, fontSize: 13
                     }}>
                       {i < step ? <FaCheck size={10} /> : i + 1}
                     </div>
-                    <span style={{ fontSize: 15, fontWeight: i === step ? 600 : 500, color: i <= step ? '#ea580c' : '#9ca3af' }}>{s}</span>
+                    <span style={{ fontSize: 15, fontWeight: i === step ? 600 : 500, color: i <= step ? '#ea580c' : 'var(--text-muted)' }}>{s}</span>
                   </div>
                   {i < STEPS.length - 1 && (
-                    <div style={{ flex: 1, height: 1, background: '#e5e7eb', margin: '0 16px' }} />
+                    <div style={{ flex: 1, height: 1, background: 'var(--border-color)', margin: '0 16px' }} />
                   )}
                 </React.Fragment>
               ))}
@@ -266,13 +266,13 @@ export default function Checkout() {
             {/* Step 0: Shipping */}
             {step === 0 && (
               <div>
-                <h5 style={{ fontWeight: 700, fontSize: 18, color: '#111827', marginBottom: 16 }}>Contact Information</h5>
+                <h5 style={{ fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', marginBottom: 16 }}>Contact Information</h5>
                 <div className="mb-5 d-flex flex-column gap-3">
                   <input type="email" placeholder="Email address" value={shipping.email} onChange={e => updateShipping('email', e.target.value)} style={inputStyle} />
                   <input type="tel" placeholder="Mobile Number" value={shipping.phone} onChange={e => updateShipping('phone', e.target.value)} style={inputStyle} />
                 </div>
 
-                <h5 style={{ fontWeight: 700, fontSize: 18, color: '#111827', marginBottom: 16 }}>Shipping Address</h5>
+                <h5 style={{ fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', marginBottom: 16 }}>Shipping Address</h5>
                 <div className="d-flex flex-column gap-3 mb-4">
                   <input type="text" placeholder="Full Name" value={shipping.name} onChange={e => updateShipping('name', e.target.value)} style={inputStyle} />
                   <input type="text" placeholder="Address Line 1" value={shipping.street} onChange={e => updateShipping('street', e.target.value)} style={inputStyle} />
@@ -280,7 +280,7 @@ export default function Checkout() {
                   
                   <div className="d-flex gap-3">
                     <input type="text" placeholder="City" value={shipping.city} onChange={e => updateShipping('city', e.target.value)} style={{ ...inputStyle, flex: 1 }} />
-                    <select value={shipping.state} onChange={e => updateShipping('state', e.target.value)} style={{ ...inputStyle, flex: 1, color: shipping.state ? '#111827' : '#9ca3af' }}>
+                    <select value={shipping.state} onChange={e => updateShipping('state', e.target.value)} style={{ ...inputStyle, flex: 1, color: shipping.state ? 'var(--text-primary)' : 'var(--text-muted)' }}>
                       <option value="" disabled>State / Province</option>
                       <option value="Maharashtra">Maharashtra</option>
                       <option value="Delhi">Delhi</option>
@@ -301,7 +301,7 @@ export default function Checkout() {
 
                 <div className="mb-5" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <input type="checkbox" id="saveInfo" checked={saveInfo} onChange={e => setSaveInfo(e.target.checked)} style={{ width: 18, height: 18, accentColor: '#ff5722', cursor: 'pointer' }} />
-                  <label htmlFor="saveInfo" style={{ fontSize: 14, color: '#4b5563', cursor: 'pointer' }}>Save this information for next time</label>
+                  <label htmlFor="saveInfo" style={{ fontSize: 14, color: 'var(--text-secondary)', cursor: 'pointer' }}>Save this information for next time</label>
                 </div>
 
                 <button 
@@ -315,7 +315,7 @@ export default function Checkout() {
             {/* Step 1: Payment */}
             {step === 1 && (
               <div>
-                <h5 style={{ fontWeight: 700, fontSize: 18, color: '#111827', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h5 style={{ fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
                   <FaCreditCard color="#ff5722" /> Payment Method
                 </h5>
                 <div className="d-flex flex-column gap-3 mb-5">
@@ -326,21 +326,21 @@ export default function Checkout() {
                   ].map(opt => (
                     <label key={opt.id} style={{
                       display: 'flex', alignItems: 'center', gap: 16, padding: 16, borderRadius: 12,
-                      border: `2px solid ${paymentMethod === opt.id ? '#ff5722' : '#e5e7eb'}`,
-                      background: paymentMethod === opt.id ? '#fff7ed' : 'white',
+                      border: `2px solid ${paymentMethod === opt.id ? '#ff5722' : 'var(--border-color)'}`,
+                      background: paymentMethod === opt.id ? 'var(--surface-hover)' : 'var(--surface)',
                       cursor: 'pointer', transition: 'all 0.2s',
                     }}>
                       <input type="radio" name="payment" value={opt.id} checked={paymentMethod === opt.id} onChange={() => setPaymentMethod(opt.id)} style={{ accentColor: '#ff5722', width: 20, height: 20 }} />
                       <div>
-                        <div style={{ fontWeight: 700, color: '#111827', fontSize: 16 }}>{opt.label}</div>
-                        <div style={{ fontSize: 13, color: '#6b7280' }}>{opt.desc}</div>
+                        <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: 16 }}>{opt.label}</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{opt.desc}</div>
                       </div>
                     </label>
                   ))}
                 </div>
 
                 <div className="d-flex gap-3">
-                  <button onClick={() => setStep(0)} style={{ border: '1px solid #e5e7eb', color: '#374151', background: 'white', borderRadius: 8, padding: '16px 24px', fontWeight: 600 }}>← Back</button>
+                  <button onClick={() => setStep(0)} style={{ border: '1px solid var(--border-color)', color: 'var(--text-primary)', background: 'var(--surface)', borderRadius: 8, padding: '16px 24px', fontWeight: 600 }}>← Back</button>
                   <button onClick={() => setStep(2)} style={{ flex: 1, background: '#ff5722', color: 'white', border: 'none', borderRadius: 8, padding: '16px', fontSize: 16, fontWeight: 600 }}>Review Order →</button>
                 </div>
               </div>
@@ -349,25 +349,25 @@ export default function Checkout() {
             {/* Step 2: Review */}
             {step === 2 && (
               <div>
-                <h5 style={{ fontWeight: 700, fontSize: 18, color: '#111827', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h5 style={{ fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
                   <FaClipboardList color="#ff5722" /> Order Review
                 </h5>
                 
-                <div className="p-4 mb-4" style={{ border: '1px solid #e5e7eb', borderRadius: 12, background: 'white' }}>
-                  <div style={{ fontSize: 14, color: '#6b7280', marginBottom: 4 }}>Shipping to</div>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: '#111827' }}>{shipping.name}</div>
-                  <div style={{ fontSize: 15, color: '#374151' }}>{shipping.street}{shipping.street2 ? `, ${shipping.street2}` : ''}, {shipping.city}, {shipping.state} - {shipping.zipCode}</div>
-                  <div style={{ fontSize: 15, color: '#374151' }}>{shipping.country}</div>
-                  <div style={{ fontSize: 14, color: '#6b7280', marginTop: 8 }}>{shipping.email} | {shipping.phone}</div>
+                <div className="p-4 mb-4" style={{ border: '1px solid var(--border-color)', borderRadius: 12, background: 'var(--surface)' }}>
+                  <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 4 }}>Shipping to</div>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>{shipping.name}</div>
+                  <div style={{ fontSize: 15, color: 'var(--text-primary)' }}>{shipping.street}{shipping.street2 ? `, ${shipping.street2}` : ''}, {shipping.city}, {shipping.state} - {shipping.zipCode}</div>
+                  <div style={{ fontSize: 15, color: 'var(--text-primary)' }}>{shipping.country}</div>
+                  <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 8 }}>{shipping.email} | {shipping.phone}</div>
                 </div>
 
-                <div className="p-4 mb-5" style={{ border: '1px solid #e5e7eb', borderRadius: 12, background: 'white' }}>
-                  <div style={{ fontSize: 14, color: '#6b7280', marginBottom: 4 }}>Payment Method</div>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: '#111827' }}>{paymentMethod}</div>
+                <div className="p-4 mb-5" style={{ border: '1px solid var(--border-color)', borderRadius: 12, background: 'var(--surface)' }}>
+                  <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 4 }}>Payment Method</div>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>{paymentMethod}</div>
                 </div>
 
                 <div className="d-flex gap-3">
-                  <button onClick={() => setStep(1)} style={{ border: '1px solid #e5e7eb', color: '#374151', background: 'white', borderRadius: 8, padding: '16px 24px', fontWeight: 600 }}>← Back</button>
+                  <button onClick={() => setStep(1)} style={{ border: '1px solid var(--border-color)', color: 'var(--text-primary)', background: 'var(--surface)', borderRadius: 8, padding: '16px 24px', fontWeight: 600 }}>← Back</button>
                   <button onClick={handlePlaceOrder} disabled={placing} style={{ flex: 1, background: '#ff5722', color: 'white', border: 'none', borderRadius: 8, padding: '16px', fontSize: 16, fontWeight: 600, display: 'flex', justifyContent: 'center', gap: 8 }}>
                     {placing ? 'Placing Order...' : 'Place Order'}
                   </button>
@@ -378,14 +378,14 @@ export default function Checkout() {
 
           {/* Right Column: Order Summary */}
           <div className="col-lg-5">
-            <div style={{ background: 'white', border: '1px solid #f3f4f6', borderRadius: 16, padding: '32px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)', position: 'sticky', top: 40 }}>
-              <h3 style={{ fontWeight: 700, fontSize: 18, color: '#111827', marginBottom: 24 }}>Order Summary</h3>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--border-color)', borderRadius: 16, padding: '32px', boxShadow: 'var(--shadow-md)', position: 'sticky', top: 40 }}>
+              <h3 style={{ fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', marginBottom: 24 }}>Order Summary</h3>
               
               <div className="mb-4">
                 {activeItems.map(item => (
                   <div key={item._id} className="d-flex align-items-center gap-3 mb-4">
                     <Link to={`/products/${item.product?._id}`} style={{ display: 'block' }}>
-                      <div style={{ width: 80, height: 80, background: '#f9fafb', borderRadius: 8, padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: 80, height: 80, background: 'var(--surface-hover)', borderRadius: 8, padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <img src={item.product?.images?.[0] || `https://placehold.co/64x64?text=P`}
                           alt={item.product?.name}
                           onError={e => { e.target.onerror = null; e.target.src = `https://placehold.co/64x64?text=Image+Not+Found`; }}
@@ -394,31 +394,31 @@ export default function Checkout() {
                     </Link>
                     <div style={{ flex: 1 }}>
                       <Link to={`/products/${item.product?._id}`} style={{ textDecoration: 'none' }}>
-                        <div style={{ fontWeight: 700, color: '#111827', fontSize: 15, marginBottom: 4 }}>{item.product?.name}</div>
+                        <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: 15, marginBottom: 4 }}>{item.product?.name}</div>
                       </Link>
-                      {item.product?.brand && <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 2 }}>Brand: {item.product.brand}</div>}
-                      <div style={{ fontSize: 13, color: '#6b7280' }}>Qty: {item.quantity}</div>
+                      {item.product?.brand && <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 2 }}>Brand: {item.product.brand}</div>}
+                      <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Qty: {item.quantity}</div>
                     </div>
-                    <div style={{ fontWeight: 700, color: '#111827', fontSize: 15 }}>₹{((item.product?.price || 0) * item.quantity).toLocaleString('en-IN')}</div>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: 15 }}>₹{((item.product?.price || 0) * item.quantity).toLocaleString('en-IN')}</div>
                   </div>
                 ))}
               </div>
 
-              <hr style={{ borderColor: '#f3f4f6', margin: '24px 0' }} />
+              <hr style={{ borderColor: 'var(--border-color)', margin: '24px 0' }} />
 
               {/* Coupon Section */}
               {!checkoutCoupon ? (
                 <div className="mb-4">
                   <div className="d-flex gap-2">
                     <div className="position-relative flex-grow-1">
-                      <FiTag size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} />
+                      <FiTag size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                       <input
                         type="text" className="form-control"
                         placeholder="Coupon code"
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                         onKeyDown={(e) => e.key === 'Enter' && handleApplyCoupon()}
-                        style={{ paddingLeft: 36, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', background: '#f9fafb', border: '1px solid #e5e7eb', color: '#111827' }}
+                        style={{ paddingLeft: 36, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--surface-hover)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
                       />
                     </div>
                     <button className="btn btn-sm px-3 rounded-pill" onClick={handleApplyCoupon} disabled={applying || !couponCode.trim()}
@@ -436,19 +436,19 @@ export default function Checkout() {
                       {checkoutCoupon.code} applied!
                     </span>
                   </div>
-                  <button onClick={() => setCheckoutCoupon(null)} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', padding: 4 }}>
+                  <button onClick={() => setCheckoutCoupon(null)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: 4 }}>
                     <FiX size={16} />
                   </button>
                 </div>
               )}
 
-              <div className="d-flex justify-content-between mb-3" style={{ fontSize: 15, color: '#4b5563' }}>
+              <div className="d-flex justify-content-between mb-3" style={{ fontSize: 15, color: 'var(--text-secondary)' }}>
                 <span>Subtotal</span>
-                <span style={{ fontWeight: 600, color: '#111827' }}>₹{subtotal.toLocaleString('en-IN')}</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>₹{subtotal.toLocaleString('en-IN')}</span>
               </div>
-              <div className="d-flex justify-content-between mb-3" style={{ fontSize: 15, color: '#4b5563' }}>
+              <div className="d-flex justify-content-between mb-3" style={{ fontSize: 15, color: 'var(--text-secondary)' }}>
                 <span>Shipping</span>
-                <span style={{ fontWeight: 600, color: '#111827' }}>₹{shippingCharge.toLocaleString('en-IN')}</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>₹{shippingCharge.toLocaleString('en-IN')}</span>
               </div>
               {discountAmount > 0 && (
                 <div className="d-flex justify-content-between mb-3" style={{ fontSize: 15, color: '#ff5722' }}>
@@ -457,26 +457,26 @@ export default function Checkout() {
                 </div>
               )}
 
-              <hr style={{ borderColor: '#f3f4f6', margin: '24px 0' }} />
+              <hr style={{ borderColor: 'var(--border-color)', margin: '24px 0' }} />
 
               <div className="d-flex justify-content-between align-items-center mb-5">
-                <span style={{ fontWeight: 800, fontSize: 18, color: '#111827' }}>Total</span>
+                <span style={{ fontWeight: 800, fontSize: 18, color: 'var(--text-primary)' }}>Total</span>
                 <span style={{ fontWeight: 800, fontSize: 28, color: '#ff5722' }}>₹{finalTotal.toLocaleString('en-IN')}</span>
               </div>
 
               {/* Badges */}
-              <div className="d-flex justify-content-between pt-4" style={{ borderTop: '1px solid #f3f4f6' }}>
+              <div className="d-flex justify-content-between pt-4" style={{ borderTop: '1px solid var(--border-color)' }}>
                 <div className="text-center" style={{ flex: 1 }}>
                   <FaShieldAlt color="#ff5722" size={24} style={{ marginBottom: 8 }} />
-                  <div style={{ fontSize: 12, color: '#4b5563', fontWeight: 500 }}>Secure<br/>Checkout</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500 }}>Secure<br/>Checkout</div>
                 </div>
                 <div className="text-center" style={{ flex: 1 }}>
                   <FaTruck color="#ff5722" size={24} style={{ marginBottom: 8 }} />
-                  <div style={{ fontSize: 12, color: '#4b5563', fontWeight: 500 }}>Fast<br/>Shipping</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500 }}>Fast<br/>Shipping</div>
                 </div>
                 <div className="text-center" style={{ flex: 1 }}>
                   <FaUndo color="#ff5722" size={24} style={{ marginBottom: 8 }} />
-                  <div style={{ fontSize: 12, color: '#4b5563', fontWeight: 500 }}>Easy<br/>Returns</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500 }}>Easy<br/>Returns</div>
                 </div>
               </div>
 

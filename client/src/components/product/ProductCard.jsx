@@ -5,11 +5,13 @@ import { FaHeart } from 'react-icons/fa';
 import StarRating from '../common/StarRating';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const ProductCard = ({ product, style = {} }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isDark } = useTheme();
 
   if (!product) return null;
 
@@ -52,7 +54,7 @@ const ProductCard = ({ product, style = {} }) => {
   };
 
   return (
-    <div className="product-card fade-in" style={style} onClick={handleClick}>
+    <div className="product-card fade-in" style={{ ...style, background: isDark ? '#1f2937' : '#ffffff', borderColor: isDark ? '#374151' : '#e2e8f0' }} onClick={handleClick}>
       {/* Discount Badge */}
       {discountPercent > 0 && (
         <span className="discount-badge">-{discountPercent}%</span>
@@ -75,7 +77,7 @@ const ProductCard = ({ product, style = {} }) => {
       </div>
 
       {/* Product Image */}
-      <div style={{ padding: '20px', background: 'var(--bg-secondary)', borderRadius: '24px', position: 'relative' }}>
+      <div style={{ padding: '20px', background: 'white', borderRadius: '24px', position: 'relative' }}>
         <img
           src={productImage}
           alt={name}
@@ -90,7 +92,7 @@ const ProductCard = ({ product, style = {} }) => {
 
       {/* Product Body */}
       <div className="pt-3 px-2">
-        <h6 style={{ fontWeight: 700, fontSize: 14, marginBottom: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</h6>
+        <h6 style={{ fontWeight: 700, fontSize: 14, marginBottom: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: isDark ? '#f9fafb' : '#0f172a' }}>{name}</h6>
 
         {/* Rating */}
         <div className="mb-2">
