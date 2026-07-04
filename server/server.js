@@ -24,6 +24,9 @@ const { generalLimiter } = require('./middleware/rateLimiter');
 // Initialize Express
 const app = express();
 
+// Trust reverse proxy (like Render/Heroku) for rate limiting
+app.set('trust proxy', 1);
+
 // ─── Connect to MongoDB ─────────────────────────────────────────────────────────
 connectDB();
 

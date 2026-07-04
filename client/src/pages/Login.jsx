@@ -29,7 +29,11 @@ export default function Login() {
         navigate(result.user?.role === 'admin' ? '/admin' : '/', { replace: true });
       }
     } catch (err) {
-      toast.error('Invalid email or password');
+      if (err.message === 'Backend sync failed') {
+        toast.error('Unable to connect to the server. Please try again later.');
+      } else {
+        toast.error('Invalid email or password');
+      }
     } finally { setLoading(false); }
   };
 

@@ -364,12 +364,16 @@ async function processChat(message, userId) {
       "Database Context:\n" + contextPrompt;
 
     // Call Groq API natively
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+
     const result = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${config.groqApiKey}`,
         'Content-Type': 'application/json'
       },
+      signal: controller.signal,
       body: JSON.stringify({
         model: 'llama-3.1-8b-instant',
         messages: [
@@ -380,6 +384,7 @@ async function processChat(message, userId) {
         max_tokens: 1024
       })
     });
+    clearTimeout(timeoutId);
     
     const data = await result.json();
     if (!result.ok) {

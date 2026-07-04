@@ -43,7 +43,7 @@ export const ChatProvider = ({ children }) => {
       const res = await axios.post(
         `${API_URL}/chat`,
         { message: content.trim() },
-        { headers }
+        { headers, timeout: 5000 }
       );
 
       // Backend wraps reply in data.data.reply
