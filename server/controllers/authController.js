@@ -27,8 +27,8 @@ const firebaseSync = async (req, res, next) => {
     let user = await User.findOne({ $or: [{ firebaseUid: uid }, { email: email.toLowerCase() }] });
 
     if (user) {
-      // Link existing user to Firebase if not already linked
-      if (!user.firebaseUid) {
+      // Always link/update the Firebase UID to ensure they can authenticate
+      if (user.firebaseUid !== uid) {
         user.firebaseUid = uid;
         if (picture && user.avatar === 'https://via.placeholder.com/150x150.png?text=User') {
           user.avatar = picture;
