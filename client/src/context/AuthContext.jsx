@@ -60,6 +60,24 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // Listen for global auth errors (401 Unauthorized from backend)
+  useEffect(() => {
+    const handleAuthError = async () => {
+      console.warn('Backend returned 401, forcing Firebase logout.');
+      await signOut(auth);
+      setToken(null);
+      setUser(null);
+      setFirebaseUser(null);
+      localStorage.removeItem('shopsmart-token');
+      // Only redirect if not already on login/register to prevent loops
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+        window.location.href = '/login';
+      }
+    };
+    window.addEventListener('auth-error', handleAuthError);
+    return () => window.removeEventListener('auth-error', handleAuthError);
+  }, []);
+
   // Listen for Firebase auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
