@@ -1,9 +1,5 @@
 import api from './api';
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' }
-});
 
 const ticketService = {
   // User creates a ticket

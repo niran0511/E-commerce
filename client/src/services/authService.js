@@ -1,22 +1,5 @@
 import api from './api';
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
-
-// Request interceptor - attach token
-
-// Response interceptor - handle errors
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
-    }
-    return Promise.reject(error);
-  }
-);
 
 const authService = {
   register: (data) => api.post('/auth/register', data),
