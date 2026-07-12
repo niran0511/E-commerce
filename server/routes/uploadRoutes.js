@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const { protect, admin } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
+const { admin } = require('../middleware/admin');
 const fs = require('fs');
 
 // Ensure uploads directory exists
