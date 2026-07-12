@@ -1,11 +1,9 @@
 import api from './api';
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' }
-});
-
 const adminService = {
+  // File Upload
+  uploadImages: (formData) => api.post('/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+
   // Dashboard
   getDashboard: () => api.get('/admin/dashboard'),
 

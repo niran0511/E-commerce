@@ -70,9 +70,40 @@ function ProductModal({ editProduct, categories, onClose, onSaved }) {
       : { ...EMPTY_FORM }
   );
   const [saving, setSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [activeTab, setActiveTab] = useState('basic');
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
+
+  const handleFileUpload = async (e) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append('images', files[i]);
+      }
+      
+      const res = await adminService.uploadImages(formData);
+      if (res.data?.success) {
+        const urls = res.data.data.urls;
+        const backendUrl = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace('/api', '');
+        const fullUrls = urls.map(url => `${backendUrl}${url}`);
+        
+        const existingImages = form.images ? form.images.split(',').map(s => s.trim()).filter(Boolean) : [];
+        const combined = [...existingImages, ...fullUrls].join(', ');
+        set('images', combined);
+        toast.success('Images uploaded successfully');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to upload images');
+    } finally {
+      setIsUploading(false);
+      e.target.value = ''; // reset file input
+    }
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -225,6 +256,13 @@ function ProductModal({ editProduct, categories, onClose, onSaved }) {
                   value={form.images} onChange={e => set('images', e.target.value)}
                   placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg" />
                 <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>First image is the main product image. Add multiple URLs separated by commas.</div>
+                
+                <div style={{ marginTop: 16, background: 'var(--bg-secondary)', padding: '12px', borderRadius: 8, border: '1px dashed var(--border-color)' }}>
+                  <label style={{...labelStyle, marginBottom: 8}}>Or Upload from Local Storage</label>
+                  <input type="file" multiple accept="image/*" onChange={handleFileUpload} style={{ fontSize: 13 }} />
+                  {isUploading && <div style={{ fontSize: 12, color: 'var(--primary)', marginTop: 8, fontWeight: 600 }}>Uploading images...</div>}
+                </div>
+
                 <ImagePreviews urls={form.images} />
               </div>
               <div>

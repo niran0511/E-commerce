@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const connectDB = require('./config/db');
 const config = require('./config/config');
 
@@ -16,6 +17,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const ticketRoutes = require('./routes/ticketRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 // Import middleware
 const { errorHandler } = require('./middleware/errorHandler');
@@ -71,6 +73,10 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/tickets', ticketRoutes);
+app.use('/api/upload', uploadRoutes);
+
+// ─── Static Files ─────────────────────────────────────────────────────────────────
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ─── 404 Handler ─────────────────────────────────────────────────────────────────
 app.use('*', (req, res) => {
