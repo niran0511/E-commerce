@@ -29,7 +29,7 @@ const ProductCard = ({ product, style = {} }) => {
     discount = 0
   } = product;
 
-  const productImage = images?.[0] || image || `https://picsum.photos/seed/${_id || 'product'}/400/400`;
+  const productImage = images?.[0] || image || `https://placehold.co/400x400/eeeeee/999999?text=Product+Image`;
   const discountPercent = discount || (mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0);
   const inWishlist = isInWishlist(_id);
   const inStock = stock > 0 || stock === undefined;
@@ -85,7 +85,7 @@ const ProductCard = ({ product, style = {} }) => {
           loading="lazy"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = `https://picsum.photos/seed/${_id || Math.random()}/400/400`;
+            e.target.src = `https://placehold.co/400x400/eeeeee/999999?text=Image+Not+Found`;
           }}
         />
       </div>

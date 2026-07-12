@@ -5,9 +5,9 @@ const ProductGallery = ({ images = [] }) => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
 
-  const imageList = images.length > 0
+  const imageList = images && images.length > 0 && images[0] !== ''
     ? images
-    : ['https://picsum.photos/seed/product/500/500'];
+    : ['https://placehold.co/500x500/eeeeee/999999?text=No+Image'];
 
   const handleMouseMove = (e) => {
     if (!isZoomed) return;
@@ -55,7 +55,7 @@ const ProductGallery = ({ images = [] }) => {
             }}
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = 'https://picsum.photos/seed/noimgmain/500/500';
+              e.target.src = 'https://placehold.co/500x500/eeeeee/999999?text=Image+Not+Found';
             }}
           />
         </div>
@@ -96,7 +96,7 @@ const ProductGallery = ({ images = [] }) => {
                 }}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = 'https://picsum.photos/seed/noimg/100/100';
+                  e.target.src = 'https://placehold.co/100x100/eeeeee/999999?text=Error';
                 }}
               />
             </div>

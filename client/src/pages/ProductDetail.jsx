@@ -154,7 +154,7 @@ export default function ProductDetail() {
           {/* Image Gallery */}
           <div className="col-lg-5">
             <div style={{ position: 'sticky', top: 80 }}>
-              <ProductGallery images={product.images?.length ? product.images : [`https://picsum.photos/seed/${product._id || 'product'}/500/500`]} />
+              <ProductGallery images={product.images?.length && product.images[0] !== '' ? product.images : [`https://placehold.co/500x500/eeeeee/999999?text=No+Image`]} />
             </div>
           </div>
 

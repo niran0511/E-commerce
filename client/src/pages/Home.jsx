@@ -486,7 +486,7 @@ export default function Home() {
                       <div className="rounded-circle mb-2 mx-auto overflow-hidden shadow-sm" style={{ width: 64, height: 64, background: 'var(--bg-secondary)', border: '2px solid transparent', transition: 'border 0.2s' }}
                         onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
                         onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}>
-                        <img src={`https://picsum.photos/seed/${cat.slug}/150/150`} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={`https://placehold.co/150x150/eeeeee/999999?text=${cat.name}`} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <div style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: 11, lineHeight: 1.2 }}>{cat.name.split(' ')[0]}</div>
                     </Link>
