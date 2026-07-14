@@ -483,10 +483,24 @@ export default function Home() {
                 <Reveal key={i} delay={i * 0.06} direction="scale" style={{ minWidth: 72 }}>
                   <div className="text-center">
                     <Link to={`/products?category=${cat.name}`} className="text-decoration-none">
-                      <div className="rounded-circle mb-2 mx-auto overflow-hidden shadow-sm" style={{ width: 64, height: 64, background: 'var(--bg-secondary)', border: '2px solid transparent', transition: 'border 0.2s' }}
-                        onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
-                        onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}>
-                        <img src={cat.image} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <div className="rounded-circle mb-2 mx-auto overflow-hidden shadow-sm d-flex align-items-center justify-content-center" 
+                        style={{ 
+                          width: 64, 
+                          height: 64, 
+                          background: `${cat.color}15`, 
+                          border: '2px solid transparent', 
+                          transition: 'all 0.2s', 
+                          fontSize: 28 
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.borderColor = cat.color;
+                          e.currentTarget.style.transform = 'scale(1.08)';
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.borderColor = 'transparent';
+                          e.currentTarget.style.transform = 'scale(1)';
+                        }}>
+                        {cat.icon}
                       </div>
                       <div style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: 11, lineHeight: 1.2 }}>{cat.name.split(' ')[0]}</div>
                     </Link>
