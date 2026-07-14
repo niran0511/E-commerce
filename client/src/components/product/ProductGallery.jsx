@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-const ProductGallery = ({ images = [] }) => {
+const ProductGallery = ({ images = [], fallbackImage = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop' }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
 
   const imageList = images && images.length > 0 && images[0] !== ''
     ? images
-    : ['https://placehold.co/500x500/eeeeee/999999?text=No+Image'];
+    : [fallbackImage];
 
   const handleMouseMove = (e) => {
     if (!isZoomed) return;
@@ -55,7 +55,7 @@ const ProductGallery = ({ images = [] }) => {
             }}
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = 'https://placehold.co/500x500/eeeeee/999999?text=Image+Not+Found';
+              e.target.src = fallbackImage;
             }}
           />
         </div>
@@ -96,7 +96,7 @@ const ProductGallery = ({ images = [] }) => {
                 }}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = 'https://placehold.co/100x100/eeeeee/999999?text=Error';
+                  e.target.src = fallbackImage;
                 }}
               />
             </div>

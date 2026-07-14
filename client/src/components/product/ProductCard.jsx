@@ -6,6 +6,7 @@ import StarRating from '../common/StarRating';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useTheme } from '../../context/ThemeContext';
+import { getFallbackImage } from '../../utils/imageFallback';
 
 const ProductCard = ({ product, style = {} }) => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const ProductCard = ({ product, style = {} }) => {
     discount = 0
   } = product;
 
-  const productImage = images?.[0] || image || `https://placehold.co/400x400/eeeeee/999999?text=Product+Image`;
+  const productImage = images?.[0] || image || getFallbackImage(product);
   const discountPercent = discount || (mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0);
   const inWishlist = isInWishlist(_id);
   const inStock = stock > 0 || stock === undefined;
@@ -85,7 +86,7 @@ const ProductCard = ({ product, style = {} }) => {
           loading="lazy"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = `https://placehold.co/400x400/eeeeee/999999?text=Image+Not+Found`;
+            e.target.src = getFallbackImage(product);
           }}
         />
       </div>
