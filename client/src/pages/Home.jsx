@@ -8,14 +8,14 @@ import { useTheme } from '../context/ThemeContext';
 import productService from '../services/productService';
 
 const CATEGORIES = [
-  { name: 'Electronics', icon: '💻', color: '#6366f1', slug: 'electronics' },
-  { name: 'Fashion', icon: '👗', color: '#ec4899', slug: 'fashion' },
-  { name: 'Home & Kitchen', icon: '🏠', color: '#f59e0b', slug: 'home-kitchen' },
-  { name: 'Books', icon: '📚', color: '#10b981', slug: 'books' },
-  { name: 'Sports & Fitness', icon: '⚽', color: '#3b82f6', slug: 'sports-fitness' },
-  { name: 'Beauty & Personal Care', icon: '💄', color: '#8b5cf6', slug: 'beauty-personal-care' },
-  { name: 'Toys & Games', icon: '🎮', color: '#ef4444', slug: 'toys-games' },
-  { name: 'Groceries', icon: '🛒', color: '#84cc16', slug: 'groceries' },
+  { name: 'Electronics', icon: '💻', color: '#6366f1', slug: 'electronics', image: 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?w=150&h=150&fit=crop' },
+  { name: 'Fashion', icon: '👗', color: '#ec4899', slug: 'fashion', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=150&h=150&fit=crop' },
+  { name: 'Home & Kitchen', icon: '🏠', color: '#f59e0b', slug: 'home-kitchen', image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=150&h=150&fit=crop' },
+  { name: 'Books', icon: '📚', color: '#10b981', slug: 'books', image: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=150&h=150&fit=crop' },
+  { name: 'Sports & Fitness', icon: '⚽', color: '#3b82f6', slug: 'sports-fitness', image: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=150&h=150&fit=crop' },
+  { name: 'Beauty & Personal Care', icon: '💄', color: '#8b5cf6', slug: 'beauty-personal-care', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=150&h=150&fit=crop' },
+  { name: 'Toys & Games', icon: '🎮', color: '#ef4444', slug: 'toys-games', image: 'https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?w=150&h=150&fit=crop' },
+  { name: 'Groceries', icon: '🛒', color: '#84cc16', slug: 'groceries', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=150&h=150&fit=crop' },
 ];
 
 const TESTIMONIALS = [
@@ -486,7 +486,7 @@ export default function Home() {
                       <div className="rounded-circle mb-2 mx-auto overflow-hidden shadow-sm" style={{ width: 64, height: 64, background: 'var(--bg-secondary)', border: '2px solid transparent', transition: 'border 0.2s' }}
                         onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
                         onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}>
-                        <img src={`https://placehold.co/150x150/eeeeee/999999?text=${cat.name}`} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={cat.image} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <div style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: 11, lineHeight: 1.2 }}>{cat.name.split(' ')[0]}</div>
                     </Link>
