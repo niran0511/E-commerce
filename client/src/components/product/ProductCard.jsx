@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
@@ -6,13 +6,14 @@ import StarRating from '../common/StarRating';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useTheme } from '../../context/ThemeContext';
-import { getFallbackImage } from '../../utils/imageFallback';
+import { getFallbackImage, getCategoryInfo, cleanAmazonUrl } from '../../utils/imageFallback';
 
 const ProductCard = ({ product, style = {} }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { isDark } = useTheme();
+  const [imageError, setImageError] = useState(false);
 
   if (!product) return null;
 
@@ -30,7 +31,8 @@ const ProductCard = ({ product, style = {} }) => {
     discount = 0
   } = product;
 
-  const productImage = images?.[0] || image || getFallbackImage(product);
+  const originalImage = images?.[0] || image;
+  const productImage = originalImage ? cleanAmazonUrl(originalImage) : getFallbackImage(product);
   const discountPercent = discount || (mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0);
   const inWishlist = isInWishlist(_id);
   const inStock = stock > 0 || stock === undefined;
@@ -78,17 +80,38 @@ const ProductCard = ({ product, style = {} }) => {
       </div>
 
       {/* Product Image */}
-      <div style={{ padding: '20px', background: 'white', borderRadius: '24px', position: 'relative' }}>
-        <img
-          src={productImage}
-          alt={name}
-          style={{ width: '100%', height: '160px', objectFit: 'contain', mixBlendMode: 'multiply' }}
-          loading="lazy"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = getFallbackImage(product);
-          }}
-        />
+      <div style={{ 
+        padding: '20px', 
+        background: 'white', 
+        borderRadius: '24px', 
+        position: 'relative',
+        height: '180px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden'
+      }}>
+        {imageError || (!images?.[0] && !image) ? (
+          <div className="d-flex flex-column align-items-center justify-content-center w-100 h-100" style={{ 
+            background: `linear-gradient(135deg, ${getCategoryInfo(product).color}12, ${getCategoryInfo(product).color}25)`,
+            borderRadius: '16px',
+            padding: '12px',
+            transition: 'transform 0.2s ease'
+          }}>
+            <span style={{ fontSize: '48px', marginBottom: '4px' }}>{getCategoryInfo(product).emoji}</span>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: getCategoryInfo(product).color, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              {product.category?.name || 'Product'}
+            </span>
+          </div>
+        ) : (
+          <img
+            src={productImage}
+            alt={name}
+            style={{ width: '100%', height: '160px', objectFit: 'contain', mixBlendMode: 'multiply' }}
+            loading="lazy"
+            onError={() => setImageError(true)}
+          />
+        )}
       </div>
 
       {/* Product Body */}

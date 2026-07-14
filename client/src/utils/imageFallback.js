@@ -1,3 +1,11 @@
+export const cleanAmazonUrl = (url) => {
+  if (!url) return url;
+  // If it's a temporary Amazon webp URL, clean it up to the direct CDN format
+  // Example: https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/41xwPQLxTML._SX300_SY300_QL70_FMwebp_.jpg
+  // Target: https://m.media-amazon.com/images/I/41xwPQLxTML._SX300_SY300_QL70_FMwebp_.jpg
+  return url.replace(/\/images\/W\/[^\/]+\/images\/I\//, '/images/I/');
+};
+
 export const getFallbackImage = (product) => {
   if (!product) return 'https://placehold.co/500x500/f8fafc/64748b?text=Product';
   

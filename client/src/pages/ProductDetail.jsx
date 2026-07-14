@@ -11,7 +11,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import productService from '../services/productService';
 import reviewService from '../services/reviewService';
-import { getFallbackImage } from '../utils/imageFallback';
+import { getFallbackImage, cleanAmazonUrl } from '../utils/imageFallback';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -155,7 +155,10 @@ export default function ProductDetail() {
           {/* Image Gallery */}
           <div className="col-lg-5">
             <div style={{ position: 'sticky', top: 80 }}>
-              <ProductGallery images={product.images?.length && product.images[0] !== '' ? product.images : []} fallbackImage={getFallbackImage(product)} />
+              <ProductGallery 
+                images={product.images?.map(img => cleanAmazonUrl(img)).filter(Boolean) || []} 
+                fallbackImage={getFallbackImage(product)} 
+              />
             </div>
           </div>
 
