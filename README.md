@@ -23,4 +23,4 @@ Make sure you have Node.js and MongoDB installed on your system.
 ### Running the Project
 1. Open a terminal and navigate to the `server` folder. Run `npm install` and then `npm run dev` to start the backend.
 2. Open another terminal and navigate to the `client` folder. Run `npm install` and then `npm start` to launch the frontend.
-3. Open `http://localhost:3000` in your browser.
+3. Open `http://localhost:3000` or Open `https://shopsmartai.vercel.app/` in your browser.
