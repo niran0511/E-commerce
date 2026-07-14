@@ -1,5 +1,16 @@
 export const getFallbackImage = (product) => {
-  if (!product) return 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop';
+  if (!product) return 'https://placehold.co/500x500/f8fafc/64748b?text=Product';
+  
+  const name = product.name || 'Product';
+  // Truncate name if it's too long for the placeholder image
+  const displayName = name.length > 25 ? name.substring(0, 22) + '...' : name;
+  
+  // Return a clean slate-colored placeholder containing the product's actual name
+  return `https://placehold.co/500x500/f8fafc/64748b?text=${encodeURIComponent(displayName)}`;
+};
+
+export const getCategoryInfo = (product) => {
+  if (!product) return { emoji: '📦', color: '#6b7280' };
   
   const categoryName = product.category?.name?.toLowerCase() || '';
   const productName = product.name?.toLowerCase() || '';
@@ -17,7 +28,7 @@ export const getFallbackImage = (product) => {
     productName.includes('headphone') ||
     productName.includes('earphone')
   ) {
-    return 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?w=400&h=400&fit=crop';
+    return { emoji: '💻', color: '#6366f1' };
   }
   
   // Fashion, Footwear, Clothing
@@ -32,7 +43,7 @@ export const getFallbackImage = (product) => {
     productName.includes('jacket') ||
     productName.includes('tshirt')
   ) {
-    return 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=400&fit=crop';
+    return { emoji: '👗', color: '#ec4899' };
   }
   
   // Home, Kitchen, Furniture, Plants
@@ -48,7 +59,7 @@ export const getFallbackImage = (product) => {
     productName.includes('bed') ||
     productName.includes('table')
   ) {
-    return 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=400&h=400&fit=crop';
+    return { emoji: '🏠', color: '#f59e0b' };
   }
   
   // Books & Stationery
@@ -59,7 +70,7 @@ export const getFallbackImage = (product) => {
     productName.includes('pen') ||
     productName.includes('pencil')
   ) {
-    return 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&h=400&fit=crop';
+    return { emoji: '📚', color: '#10b981' };
   }
   
   // Sports, Fitness, Gym
@@ -72,7 +83,7 @@ export const getFallbackImage = (product) => {
     productName.includes('dumb') ||
     productName.includes('cycle')
   ) {
-    return 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400&h=400&fit=crop';
+    return { emoji: '⚽', color: '#3b82f6' };
   }
   
   // Beauty, Personal Care, Cosmetics
@@ -86,7 +97,7 @@ export const getFallbackImage = (product) => {
     productName.includes('groom') ||
     productName.includes('lotion')
   ) {
-    return 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop';
+    return { emoji: '💄', color: '#8b5cf6' };
   }
   
   // Toys & Games
@@ -98,7 +109,7 @@ export const getFallbackImage = (product) => {
     productName.includes('card') ||
     productName.includes('doll')
   ) {
-    return 'https://images.unsplash.com/photo-1566577134770-3d85bb3a9cc4?w=400&h=400&fit=crop';
+    return { emoji: '🎮', color: '#ef4444' };
   }
   
   // Groceries, Food & Beverages
@@ -112,9 +123,9 @@ export const getFallbackImage = (product) => {
     productName.includes('tea') ||
     productName.includes('coffee')
   ) {
-    return 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=400&fit=crop';
+    return { emoji: '🛒', color: '#84cc16' };
   }
 
-  // Default clean neutral watch/gadget product photo
-  return 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop';
+  return { emoji: '📦', color: '#6b7280' };
 };
+
